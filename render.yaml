@@ -1,0 +1,23 @@
+services:
+  # Python Service (FastAPI)
+  - type: web
+    name: grantaid-service
+    runtime: python
+    region: oregon
+    buildCommand: pip install -r service/requirements.txt
+    startCommand: uvicorn service.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.10.0
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_KEY
+        sync: false
+
+  # Frontend (Next.js) - Placeholder Configuration
+  # Once initialized, this would likely be:
+  # - type: web
+  #   name: grantaid-frontend
+  #   env: node
+  #   buildCommand: cd frontend && npm install && npm run build
+  #   startCommand: cd frontend && npm start
