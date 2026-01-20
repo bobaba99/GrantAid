@@ -9,17 +9,17 @@ class LLMClient:
     """
     Client for interacting with Google's Gemini models via the GenAI SDK.
     """
-    def __init__(self, api_key: str = None, model_name: str = "gemini-2.0-flash-exp"):
+    def __init__(self, api_key: str = None, model_name: str = "gemini-3.0-flash"):
         """
         Initialize the LLM client.
         
         Args:
-            api_key: Google API key. Defaults to GOOGLE_API_KEY env var.
+            api_key: Google API key. Defaults to GEMINI_API_KEY env var.
             model_name: The model to use.
         """
-        self.api_key = api_key or os.getenv("GOOGLE_API_KEY")
+        self.api_key = api_key or os.getenv("GEMINI_API_KEY")
         if not self.api_key:
-            logger.warning("GOOGLE_API_KEY not found. LLM features will fail.")
+            logger.warning("GEMINI_API_KEY not found. LLM features will fail.")
         
         self.client = genai.Client(api_key=self.api_key)
         self.model_name = model_name

@@ -7,7 +7,6 @@ Supported list of grant and fundings:
 - [CIHR](https://cihr-irsc.gc.ca/e/193.html)
 - [FRQS](https://frq.gouv.qc.ca/en/health/)
 - [NSERC](https://nserc-crsng.canada.ca/en)
-- [Vanier Canada Graduate Scholarship](https://vanier.gc.ca/en/home-accueil.html)
 
 Student would input their:
 
@@ -42,7 +41,7 @@ Commonly required documents
 # Tech stack
 
 - **Backend & Database:** Supabase (PostgreSQL + Auth + Edge Functions)
-- **Service Layer:** Python (FastAPI/Flask) for complex logic & scraping
+- **Service Layer:** Python (FastAPI) for complex logic & scraping
 - **AI Model:** Gemini 3 (via Google AI Studio API)
 - **Frontend:** React / Next.js with Tailwind CSS
 - **Hosting:** Render (Web Service) + Vercel (Frontend optional)
@@ -79,8 +78,6 @@ Compile in Docker: `docker-compose up --build`
 
 ## 1. Requirement Scraper & Diff Engine
 
-- **Scraper:** AI web browser extension to automate scrapping
-- **Parser:** Extract key dates, formatting rules (margins, font size), and evaluation criteria.
 - **Diff Engine:** Compare `cycle_year` (e.g., 2025 vs 2024) to highlight changes in requirements (e.g., "Page limit reduced from 2 to 1").
 
 ## 2. Experience "Remixer" (LLM)

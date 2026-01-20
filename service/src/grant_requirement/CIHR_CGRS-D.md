@@ -1,6 +1,7 @@
 ---
 title: CIHR CGRS-D
 last_updated: 2026-01-19
+cycle: 2025-2026
 ---
 
 # Links

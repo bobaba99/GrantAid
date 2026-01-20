@@ -13,10 +13,6 @@ class ExperienceType(str, Enum):
 class GrantAgency(str, Enum):
     """Enumeration of grant agencies."""
     CIHR = "CIHR"
-    NSERC = "NSERC"
-    SSHRC = "SSHRC"
-    FRQNT = "FRQNT"
-    FRQSC = "FRQSC"
     FRQS = "FRQS"
     OTHER = "Other"
 
@@ -38,9 +34,9 @@ class GrantRequirement(BaseModel):
     Represents a specific requirement for a grant application.
     """
     id: str = Field(..., description="Unique ID of the requirement")
-    category: str = Field(..., description="Category (e.g., CV, Personal Statement)")
+    category: str = Field(..., description="Category (e.g., CV, Research Statement)")
     description: str = Field(..., description="Description of the requirement")
-    max_words: Optional[int] = Field(None, description="Maximum word count")
+    max_pages: Optional[int] = Field(None, description="Maximum page count")
     format_rules: Optional[dict] = Field(None, description="Formatting rules (margins, font, etc.)")
 
 class GrantDefinition(BaseModel):
