@@ -4,13 +4,10 @@ This web app will help Quebec graduate student apply to grant and fundings.
 
 Supported list of grant and fundings:
 
-1. [CIHR](https://cihr-irsc.gc.ca/e/193.html)
-2. [FRQNT](https://frq.gouv.qc.ca/en/nature-and-technologies/)
-3. [FRQSC](https://frq.gouv.qc.ca/en/society-and-culture/)
-4. [FRQS](https://frq.gouv.qc.ca/en/health/)
-5. [NSERC](https://nserc-crsng.canada.ca/en)
-6. [SSHRC](https://sshrc-crsh.canada.ca/en.aspx)
-7. [Vanier Canada Graduate Scholarship](https://vanier.gc.ca/en/home-accueil.html)
+- [CIHR](https://cihr-irsc.gc.ca/e/193.html)
+- [FRQS](https://frq.gouv.qc.ca/en/health/)
+- [NSERC](https://nserc-crsng.canada.ca/en)
+- [Vanier Canada Graduate Scholarship](https://vanier.gc.ca/en/home-accueil.html)
 
 Student would input their:
 
