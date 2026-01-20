@@ -56,3 +56,80 @@ def format_error_response(error: Exception) -> Dict[str, str]:
         "error": type(error).__name__,
         "details": str(error)
     }
+
+def load_grant_context(funding) -> str:
+    """
+    Attempts to load specific evaluation criteria from markdown files.
+    Prioritizes:
+    1. Exact match: {Agency}_{Name}_eval.md
+    2. Agency fallback: {Agency}_eval.md
+    """
+    import os
+    from pathlib import Path
+    
+    # Customize logger usage if needed, or pass it in
+    logger = get_logger(__name__)
+    
+    # Normalize names for matching
+    # funding is expected to be a FundingDefinition model
+    agency = funding.agency.value
+    name = funding.name.replace(" ", "_").replace("/", "-")
+    
+    base_path = Path(__file__).parent / "grant_context"
+    
+    candidates = []
+    if base_path.exists():
+        for file in base_path.glob("*.md"):
+            if agency in file.name and "eval" in file.name:
+                # Simple heuristic: if funding name parts are in filename
+                if any(part in file.name for part in name.split("_") if len(part) > 2):
+                    candidates.append(file)
+    
+    context = ""
+    if candidates:
+        best_match = max(candidates, key=lambda f: len(set(name.split("_")) & set(f.name.split("_"))))
+        try:
+            context = best_match.read_text()
+            logger.info(f"Loaded context from {best_match.name}")
+        except Exception as e:
+            logger.warning(f"Failed to read context file {best_match}: {e}")
+            
+    return context
+def load_grant_context(funding) -> str:
+    """
+    Attempts to load specific evaluation criteria from markdown files.
+    Prioritizes:
+    1. Exact match: {Agency}_{Name}_eval.md
+    2. Agency fallback: {Agency}_eval.md
+    """
+    import os
+    from pathlib import Path
+    
+    # Customize logger usage if needed, or pass it in
+    logger = get_logger(__name__)
+    
+    # Normalize names for matching
+    # funding is expected to be a FundingDefinition model
+    agency = funding.agency.value
+    name = funding.name.replace(" ", "_").replace("/", "-")
+    
+    base_path = Path(__file__).parent / "grant_context"
+    
+    candidates = []
+    if base_path.exists():
+        for file in base_path.glob("*.md"):
+            if agency in file.name and "eval" in file.name:
+                # Simple heuristic: if funding name parts are in filename
+                if any(part in file.name for part in name.split("_") if len(part) > 2):
+                    candidates.append(file)
+    
+    context = ""
+    if candidates:
+        best_match = max(candidates, key=lambda f: len(set(name.split("_")) & set(f.name.split("_"))))
+        try:
+            context = best_match.read_text()
+            logger.info(f"Loaded context from {best_match.name}")
+        except Exception as e:
+            logger.warning(f"Failed to read context file {best_match}: {e}")
+            
+    return context

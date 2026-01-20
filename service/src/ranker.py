@@ -1,7 +1,7 @@
 from typing import List
 from src.models import Experience, FundingDefinition
 from src.llm_client import LLMClient
-from src.utils import get_logger
+from src.utils import get_logger, load_grant_context
 
 logger = get_logger(__name__)
 
@@ -43,10 +43,16 @@ class ExperienceRanker:
             raise
 
     def _build_ranking_prompt(self, experience: Experience, target_funding: FundingDefinition) -> str:
+        context_text = load_grant_context(target_funding)
+        
         return f"""
-        You are an expert funding evaluator. Rate the relevance of the following experience for the specific grant.
+        You are an expert funding evaluator. Rate the relevance of the following experience for the specific funding opportunity.
+        Evaluate experiences against the agency's evaluation criteria.
         
         Target Funding: {target_funding.name} ({target_funding.agency})
+        
+        Agency Evaluation Context:
+        {context_text}
         
         Experience:
         - Title: {experience.title}
@@ -59,3 +65,4 @@ class ExperienceRanker:
         2. Provide a 1-sentence narrative of how this experience fits the agency's funding goals and visions.
         3. Provide a 1-sentence rationale for the score and integration.
         """
+

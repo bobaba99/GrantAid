@@ -1,0 +1,31 @@
+- Research potential
+    - Indicators of research potential:
+        - quality of research proposal:
+            - specific, focused and feasible research question(s) and/or objective(s)
+            - clear description and soundness of the proposed methodology
+            - significance and expected contributions to research
+        - demonstration of potential to carry out proposed research relative to the stage of study, lived experience and knowledge systems
+        - quality of contributions and extent to which they advance the field of research–contributions may include publications, patents, reports, posters, abstracts, monographs, presentations, creative outputs, knowledge translation outputs, community products, etc.
+        - demonstration of sound judgment and ability to think critically
+        - demonstration of responsible and ethical research conduct, including honest and thoughtful inquiry, rigorous analysis, commitment to safety and dissemination of research results and adherence to professional standards
+        - demonstration of originality, initiative, autonomy, relevant community involvement and outreach
+        - ability to communicate theoretical, technical and/or scientific concepts clearly and logically in written and oral formats
+    - Weight: 50%
+- Relevant experience and achievements obtained within and beyond academia
+    - Indicators of relevant experience and achievements obtained within and beyond academia:
+        - relevant training, such as academic training, lived experience and traditional teachings
+        - scholarships, awards and distinctions (amount, duration, and prestige)
+        - academic record:
+            - transcripts
+            - duration of previous studies
+            - program requirements and courses pursued
+            - course load
+            - relative standing in program (if available)
+        - professional, academic, and extracurricular activities, as well as collaborations with supervisors, colleagues, peers, students and members of the community, such as:
+            - teaching, mentoring, supervising and/or coaching
+            - managing projects
+            - participating in science and/or research promotion
+            - participating in community outreach, volunteer work, and/or civic engagement
+            - chairing committees and/or organizing conferences and meetings
+            - participating in departmental or institutional organizations, associations, societies and/or clubs
+    - Weight: 50%

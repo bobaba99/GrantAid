@@ -20,9 +20,7 @@ The web app contains the mission statements/values/objectives from above institu
 Commonly required documents
 
 - CV (moving towards Tri-agency CV for CIHR)
-- Personal statement
-- Abstract (500 words explaining your research, someone outside your field can understand it too)
-- Proposal/research statement (references separated)
+- Research statement (500 words explaining your research, someone outside your field can understand it too)
     - https://cihr-irsc.gc.ca/e/54275.html
     - https://cihr-irsc.gc.ca/e/53574.html
 
@@ -34,7 +32,7 @@ Commonly required documents
 4. Present application requirements and document checklist (interactive)
 5. Compare differences between the requirements between the previous and current application cycle
 6. LLM guidance
-    1. Generate a list of recommended personal and professional experiences for CV and personal statement
+    1. Generate a list of recommended personal and professional experiences for CV and research statement
     2. Generate a one-paragraph summary/rationale that align student’s research with institution objectives/values/missions
 7. Generate formatted CV
 
@@ -72,7 +70,7 @@ Compile in Docker: `docker-compose up --build`
 - `applications`: Tracks a user's progress on a specific grant.
     - Columns: `id`, `user_id`, `grant_id`, `status` (Draft, In Review, Submitted), `created_at`.
 - `application_documents`: Generated content for an application.
-    - Columns: `id`, `application_id`, `type` (CV, Personal Statement), `content` (Markdown/Text), `version`.
+    - Columns: `id`, `application_id`, `type` (CV, Research Statement), `content` (Markdown/Text), `version`.
 
 # Feature Specifications
 

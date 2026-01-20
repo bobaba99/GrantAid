@@ -1,0 +1,28 @@
+- Academic excellence: As demonstrated by past academic results, transcripts, awards and distinctions.
+    - Indicators of academic excellence:
+        - academic record
+        - scholarships and awards held
+        - duration of previous studies
+        - type of program and courses pursued
+        - course load
+        - relative standing (if available)
+    - Weight: 50%
+- Research potential: As demonstrated by the applicant’s research history, their interest in discovery, the proposed research, its potential contribution to the advancement of knowledge in the field and any anticipated outcomes.
+    - Indicators of research potential:
+        - quality and originality of contributions to research and development
+        - relevance of work experience and academic training to field of proposed research
+        - significance, feasibility and merit of proposed research
+        - sound judgment and ability to think critically
+        - ability to apply skills and knowledge
+        - initiative and autonomy
+        - research experience and achievements relative to expectations of someone with the applicant’s academic experience
+    - Weight: 30%
+- Personal characteristics and interpersonal skills: As demonstrated by the applicant’s past professional and relevant extracurricular interactions and collaborations.
+    - Indicators of personal characteristics and interpersonal skills:
+        - work experience
+        - leadership experience
+        - project management, including organizing conferences and meetings
+        - ability or potential to communicate theoretical, technical or scientific concepts clearly and logically in written and oral formats
+        - involvement in academic life
+        - volunteerism/community outreach
+    - Weight: 20%
