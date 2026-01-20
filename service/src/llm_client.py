@@ -9,7 +9,7 @@ class LLMClient:
     """
     Client for interacting with Google's Gemini models via the GenAI SDK.
     """
-    def __init__(self, api_key: str = None, model_name: str = "gemini-3.0-flash"):
+    def __init__(self, api_key: str = None, model_name: str = "gemini-3-flash-preview"):
         """
         Initialize the LLM client.
         

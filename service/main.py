@@ -1,44 +1,54 @@
 import os
 from fastapi import FastAPI, HTTPException, Depends
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 from src.models import (
     Experience, FundingDefinition, RemixedExperienceRequest, 
     RemixedExperienceResponse
 )
-from src.utils import get_logger, format_error_response
-from src.llm_client import LLMClient
 from src.remixer import ExperienceRemixer
 from src.ranker import ExperienceRanker
+from src.utils import get_logger, format_error_response
+from src.dependencies import (
+    get_current_user, get_remixer, get_ranker
+)
+from src.routes import funding
 
 logger = get_logger("grantaid-service")
 
-app = FastAPI(title="GrantAid Service")
+app = FastAPI(title="GrantAid")
 
-# Dependencies
-def get_llm_client():
-    return LLMClient()
+# CORS Configuration
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
-def get_remixer(llm=Depends(get_llm_client)):
-    return ExperienceRemixer(llm)
-
-def get_ranker(llm=Depends(get_llm_client)):
-    return ExperienceRanker(llm)
+app.include_router(funding.router, prefix="/api/funding", tags=["funding"])
 
 @app.get("/")
 def read_root():
-    return {"status": "ok", "service": "GrantAid Backend"}
+    return {"status": "ok", "service": "GrantAid Backend", "version": "1.0.0"}
+
+@app.get("/me")
+def read_current_user(user = Depends(get_current_user)):
+    return {"id": user.id, "email": user.email}
 
 @app.post("/remix", response_model=RemixedExperienceResponse)
 def remix_experience(
     request: RemixedExperienceRequest,
-    remixer: ExperienceRemixer = Depends(get_remixer)
+    remixer: ExperienceRemixer = Depends(get_remixer),
+    user = Depends(get_current_user)
 ):
     """
     Rewrites an experience to match a funding's requirements using LLM.
     """
     try:
-        logger.info(f"Remixing experience for funding: {request.target_funding.name}")
+        logger.info(f"Remixing experience for funding: {request.target_funding.name} (User: {user.email})")
         return remixer.remix_experience(
             request.experience, 
             request.target_funding
@@ -56,7 +66,8 @@ class RankRequest(BaseModel):
 @app.post("/rank")
 def rank_experience(
     request: RankRequest,
-    ranker: ExperienceRanker = Depends(get_ranker)
+    ranker: ExperienceRanker = Depends(get_ranker),
+    user = Depends(get_current_user)
 ):
     """
     Scores an experience for a specific funding.
