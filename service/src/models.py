@@ -39,6 +39,7 @@ class FundingDefinition(BaseModel):
     cycle_year: str = Field(..., description="Cycle year (e.g., 2025-2026)")
     deadline: date = Field(..., description="Application deadline")
     website_url: HttpUrl = Field(..., description="URL to the funding page")
+    description: Optional[str] = Field(None, description="Detailed description/context of the funding")
 
 class FundingVision(BaseModel):
     """

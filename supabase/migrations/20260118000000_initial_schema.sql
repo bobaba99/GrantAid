@@ -1,9 +1,8 @@
 -- Create custom types
 CREATE TYPE experience_type AS ENUM ('Professional', 'Academic', 'Volunteer', 'Research');
-CREATE TYPE funding_agency AS ENUM ('CIHR', 'NSERC', 'SSHRC', 'FRQNT', 'FRQSC', 'FRQS', 'Other');
+CREATE TYPE funding_agency AS ENUM ('CIHR', 'FRQS', 'Other');
 CREATE TYPE application_status AS ENUM ('Draft', 'In Review', 'Submitted');
--- TODO: check with portals for document types
-CREATE TYPE document_type AS ENUM ('CV', 'Personal Statement', 'Transcript', 'Other');
+CREATE TYPE document_type AS ENUM ('CV', 'Research Statement', 'Other');
 
 -- 1. Profiles (Extends auth.users)
 CREATE TABLE profiles (
@@ -57,34 +56,11 @@ CREATE TABLE requirements (
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
--- 5. Applications (Link User to funding)
-CREATE TABLE application (
-  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  user_id UUID REFERENCES profiles(id) ON DELETE CASCADE NOT NULL,
-  funding_id UUID REFERENCES funding(id) ON DELETE CASCADE NOT NULL,
-  status application_status DEFAULT 'Draft',
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-  UNIQUE(user_id, funding_id)
-);
-
--- 6. Application Documents (Generated files for an application)
-CREATE TABLE application_documents (
-  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  application_id UUID REFERENCES application(id) ON DELETE CASCADE NOT NULL,
-  type document_type NOT NULL,
-  content TEXT, -- Markdown or text content
-  version INTEGER DEFAULT 1,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-);
-
 -- Enable Row Level Security (RLS)
 ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE experience ENABLE ROW LEVEL SECURITY;
 ALTER TABLE funding ENABLE ROW LEVEL SECURITY;
 ALTER TABLE requirements ENABLE ROW LEVEL SECURITY;
-ALTER TABLE application ENABLE ROW LEVEL SECURITY;
-ALTER TABLE application_documents ENABLE ROW LEVEL SECURITY;
 
 -- RLS Policies
 
@@ -110,37 +86,6 @@ CREATE POLICY "Funding are viewable by everyone" ON funding
 CREATE POLICY "Requirements are viewable by everyone" ON requirements
   FOR SELECT USING (true);
 
--- Applications: Users can manage their own application
-CREATE POLICY "Users can view own application" ON application
-  FOR SELECT USING (auth.uid() = user_id);
-CREATE POLICY "Users can insert own application" ON application
-  FOR INSERT WITH CHECK (auth.uid() = user_id);
-CREATE POLICY "Users can update own application" ON application
-  FOR UPDATE USING (auth.uid() = user_id);
-
--- Application: Users can delete draft applications
-CREATE POLICY "Users can delete own application" ON application
-  FOR DELETE USING (auth.uid() = user_id);
-
--- Application Documents: Users can access documents for their own application
--- We use a join in the check implicitly by ensuring the application belongs to the user
-CREATE POLICY "Users can view own documents" ON application_documents
-  FOR SELECT USING (
-    EXISTS (SELECT 1 FROM application WHERE id = application_documents.application_id AND user_id = auth.uid())
-  );
-CREATE POLICY "Users can insert own documents" ON application_documents
-  FOR INSERT WITH CHECK (
-    EXISTS (SELECT 1 FROM application WHERE id = application_documents.application_id AND user_id = auth.uid())
-  );
-CREATE POLICY "Users can update own documents" ON application_documents
-  FOR UPDATE USING (
-    EXISTS (SELECT 1 FROM application WHERE id = application_documents.application_id AND user_id = auth.uid())
-  );
-CREATE POLICY "Users can delete own documents" ON application_documents
-  FOR DELETE USING (
-    EXISTS (SELECT 1 FROM application WHERE id = application_documents.application_id AND user_id = auth.uid())
-  );
-  
 -- Function to handle new user signup
 CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS TRIGGER AS $$
@@ -155,34 +100,3 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 CREATE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users
   FOR EACH ROW EXECUTE PROCEDURE public.handle_new_user();
-
--- 7. Experience Rankings (LLM Scoring)
-CREATE TABLE experience_rankings (
-  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  experience_id UUID REFERENCES experience(id) ON DELETE CASCADE NOT NULL,
-  funding_id UUID REFERENCES funding(id) ON DELETE CASCADE NOT NULL,
-  experience_rating INTEGER CHECK (experience_rating >= 1 AND experience_rating <= 10),
-  rationale TEXT,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-  UNIQUE(experience_id, funding_id)
-);
-
--- Enable RLS
-ALTER TABLE experience_rankings ENABLE ROW LEVEL SECURITY;
-
--- Policies for Experience Rankings
--- Users can view rankings if they own the experience
-CREATE POLICY "Users can view own rankings" ON experience_rankings
-  FOR SELECT USING (
-    EXISTS (SELECT 1 FROM experience WHERE id = experience_rankings.experience_id AND user_id = auth.uid())
-  );
--- Users can insert rankings (usually via service, but users might trigger it)
-CREATE POLICY "Users can insert own rankings" ON experience_rankings
-  FOR INSERT WITH CHECK (
-    EXISTS (SELECT 1 FROM experience WHERE id = experience_rankings.experience_id AND user_id = auth.uid())
-  );
--- Users can delete rankings if they update the experience
-CREATE POLICY "Users can delete own rankings" ON experience_rankings
-  FOR DELETE USING (
-    EXISTS (SELECT 1 FROM experience WHERE id = experience_rankings.experience_id AND user_id = auth.uid())
-  );

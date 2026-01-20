@@ -8,10 +8,9 @@ from src.models import (
     RemixedExperienceResponse
 )
 from src.remixer import ExperienceRemixer
-from src.ranker import ExperienceRanker
 from src.utils import get_logger, format_error_response
 from src.dependencies import (
-    get_current_user, get_remixer, get_ranker
+    get_current_user, get_remixer
 )
 from src.routes import funding
 
@@ -29,6 +28,8 @@ app.add_middleware(
 )
 
 app.include_router(funding.router, prefix="/api/funding", tags=["funding"])
+from src.routes import experiences
+app.include_router(experiences.router, prefix="/api", tags=["experiences"])
 
 @app.get("/")
 def read_root():
@@ -37,6 +38,7 @@ def read_root():
 @app.get("/me")
 def read_current_user(user = Depends(get_current_user)):
     return {"id": user.id, "email": user.email}
+
 
 @app.post("/remix", response_model=RemixedExperienceResponse)
 def remix_experience(
@@ -58,23 +60,3 @@ def remix_experience(
         logger.error(error)
         raise HTTPException(status_code=500, detail=error)
 
-# Ranker
-class RankRequest(BaseModel):
-    experience: Experience
-    target_funding: FundingDefinition
-
-@app.post("/rank")
-def rank_experience(
-    request: RankRequest,
-    ranker: ExperienceRanker = Depends(get_ranker),
-    user = Depends(get_current_user)
-):
-    """
-    Scores an experience for a specific funding.
-    """
-    try:
-        result = ranker.rank_experience(request.experience, request.target_funding)
-        return result
-    except Exception as e:
-        error = format_error_response(e)
-        raise HTTPException(status_code=500, detail=error)

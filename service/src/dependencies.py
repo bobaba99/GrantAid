@@ -44,13 +44,9 @@ def get_current_user(token: str = Depends(oauth2_scheme)):
 
 from src.llm_client import LLMClient
 from src.remixer import ExperienceRemixer
-from src.ranker import ExperienceRanker
 
 def get_llm_client():
     return LLMClient()
 
 def get_remixer(llm=Depends(get_llm_client)):
     return ExperienceRemixer(llm)
-
-def get_ranker(llm=Depends(get_llm_client)):
-    return ExperienceRanker(llm)
