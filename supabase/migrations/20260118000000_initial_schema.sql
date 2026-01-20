@@ -42,9 +42,7 @@ CREATE TABLE funding (
   deadline DATE NOT NULL,
   website_url TEXT,
   note TEXT,
-  institution_objectives TEXT,
-  institution_values TEXT,
-  institution_mission TEXT,
+  institution_vision TEXT,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
@@ -54,7 +52,7 @@ CREATE TABLE requirements (
   funding_id UUID REFERENCES funding(id) ON DELETE CASCADE NOT NULL,
   category TEXT NOT NULL, -- e.g., "CV", "Statement"
   description TEXT NOT NULL,
-  max_words INTEGER,
+  max_pages INTEGER,
   format_rules JSONB, -- Store margins, font sizes as JSON
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
@@ -163,7 +161,7 @@ CREATE TABLE experience_rankings (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   experience_id UUID REFERENCES experience(id) ON DELETE CASCADE NOT NULL,
   funding_id UUID REFERENCES funding(id) ON DELETE CASCADE NOT NULL,
-  score INTEGER CHECK (score >= 1 AND score <= 10),
+  experience_rating INTEGER CHECK (experience_rating >= 1 AND experience_rating <= 10),
   rationale TEXT,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   UNIQUE(experience_id, funding_id)

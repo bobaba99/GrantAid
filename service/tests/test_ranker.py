@@ -1,6 +1,6 @@
 from unittest.mock import MagicMock
 from src.ranker import ExperienceRanker
-from src.models import Experience, ExperienceType, GrantDefinition, GrantAgency
+from src.models import Experience, ExperienceType, FundingDefinition, FundingAgency
 from datetime import date
 
 def test_ranker_flow():
@@ -21,16 +21,16 @@ def test_ranker_flow():
         start_date=date(2022, 1, 1),
         description="Code"
     )
-    grant = GrantDefinition(
-        id="g1",
-        name="Grant",
-        agency=GrantAgency.NSERC,
+    funding = FundingDefinition(
+        id="f1",
+        name="Funding",
+        agency=FundingAgency.NSERC,
         cycle_year="2025",
         deadline=date(2025, 12, 1),
         website_url="https://example.com"
     )
     
-    result = ranker.rank_experience(exp, grant)
+    result = ranker.rank_experience(exp, funding)
     
     assert result["score"] == 8
     assert result["rationale"] == "Relevant"

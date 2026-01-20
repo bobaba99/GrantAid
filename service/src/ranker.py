@@ -1,5 +1,5 @@
 from typing import List
-from src.models import Experience, GrantDefinition
+from src.models import Experience, FundingDefinition
 from src.llm_client import LLMClient
 from src.utils import get_logger
 
@@ -12,20 +12,20 @@ class ExperienceRanker:
     def __init__(self, llm_client: LLMClient):
         self.llm = llm_client
 
-    def rank_experience(self, experience: Experience, target_grant: GrantDefinition) -> dict:
+    def rank_experience(self, experience: Experience, target_funding: FundingDefinition) -> dict:
         """
         Generates a relevance score and rationale for an experience given a grant.
         
         Args:
             experience: The experience to evaluate.
-            target_grant: The grant to evaluate against.
+            target_funding: The grant to evaluate against.
             
         Returns:
             dict: {"score": int, "rationale": str}
         """
-        logger.info(f"Ranking experience {experience.id} for grant {target_grant.name}")
+        logger.info(f"Ranking experience {experience.id} for grant {target_funding.name}")
         
-        prompt = self._build_ranking_prompt(experience, target_grant)
+        prompt = self._build_ranking_prompt(experience, target_funding)
         
         schema = {
             "type": "OBJECT",
@@ -42,11 +42,11 @@ class ExperienceRanker:
             logger.error(f"Failed to rank experience: {e}")
             raise
 
-    def _build_ranking_prompt(self, experience: Experience, grant: GrantDefinition) -> str:
+    def _build_ranking_prompt(self, experience: Experience, target_funding: FundingDefinition) -> str:
         return f"""
-        You are an expert academic evaluator. Rate the relevance of the following experience for the specific grant.
+        You are an expert funding evaluator. Rate the relevance of the following experience for the specific grant.
         
-        Target Grant: {grant.name} ({grant.agency})
+        Target Funding: {target_funding.name} ({target_funding.agency})
         
         Experience:
         - Title: {experience.title}
@@ -56,5 +56,6 @@ class ExperienceRanker:
         
         Instructions:
         1. Score the relevance from 1 to 10 (10 being perfectly aligned).
-        2. Provide a 1-sentence rationale for the score.
+        2. Provide a 1-sentence narrative of how this experience fits the agency's funding goals and visions.
+        3. Provide a 1-sentence rationale for the score and integration.
         """

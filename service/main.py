@@ -1,16 +1,15 @@
 import os
-from typing import List
 from fastapi import FastAPI, HTTPException, Depends
 from pydantic import BaseModel
 
 from src.models import (
-    Experience, GrantDefinition, RemixedExperienceRequest, 
-    RemixedExperienceResponse, GrantRequirement
+    Experience, FundingDefinition, RemixedExperienceRequest, 
+    RemixedExperienceResponse
 )
 from src.utils import get_logger, format_error_response
 from src.llm_client import LLMClient
 from src.remixer import ExperienceRemixer
-from src.diff_engine import DiffEngine
+from src.ranker import ExperienceRanker
 
 logger = get_logger("grantaid-service")
 
@@ -23,13 +22,8 @@ def get_llm_client():
 def get_remixer(llm=Depends(get_llm_client)):
     return ExperienceRemixer(llm)
 
-def get_diff_engine():
-    return DiffEngine()
-
-# Request Models
-class DiffRequest(BaseModel):
-    old_requirements: List[GrantRequirement]
-    new_requirements: List[GrantRequirement]
+def get_ranker(llm=Depends(get_llm_client)):
+    return ExperienceRanker(llm)
 
 @app.get("/")
 def read_root():
@@ -41,52 +35,34 @@ def remix_experience(
     remixer: ExperienceRemixer = Depends(get_remixer)
 ):
     """
-    Rewrites an experience to match a grant's requirements using LLM.
+    Rewrites an experience to match a funding's requirements using LLM.
     """
     try:
-        logger.info(f"Remixing experience for grant: {request.target_grant.name}")
+        logger.info(f"Remixing experience for funding: {request.target_funding.name}")
         return remixer.remix_experience(
             request.experience, 
-            request.target_grant, 
-            request.focus_keywords
+            request.target_funding
         )
     except Exception as e:
         error = format_error_response(e)
-        raise HTTPException(status_code=500, detail=error)
-
-@app.post("/diff")
-def diff_requirements(
-    request: DiffRequest,
-    engine: DiffEngine = Depends(get_diff_engine)
-):
-    """
-    Compares two sets of grant requirements.
-    """
-    try:
-        return engine.compare_requirements(request.old_requirements, request.new_requirements)
-    except Exception as e:
-        error = format_error_response(e)
+        logger.error(error)
         raise HTTPException(status_code=500, detail=error)
 
 # Ranker
 class RankRequest(BaseModel):
     experience: Experience
-    target_grant: GrantDefinition
-
-def get_ranker(llm=Depends(get_llm_client)):
-    from src.ranker import ExperienceRanker
-    return ExperienceRanker(llm)
+    target_funding: FundingDefinition
 
 @app.post("/rank")
 def rank_experience(
     request: RankRequest,
-    ranker = Depends(get_ranker)
+    ranker: ExperienceRanker = Depends(get_ranker)
 ):
     """
-    Scores an experience for a specific grant.
+    Scores an experience for a specific funding.
     """
     try:
-        result = ranker.rank_experience(request.experience, request.target_grant)
+        result = ranker.rank_experience(request.experience, request.target_funding)
         return result
     except Exception as e:
         error = format_error_response(e)

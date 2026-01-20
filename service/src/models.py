@@ -10,11 +10,11 @@ class ExperienceType(str, Enum):
     VOLUNTEER = "Volunteer"
     RESEARCH = "Research"
 
-class GrantAgency(str, Enum):
-    """Enumeration of grant agencies."""
+class FundingAgency(str, Enum):
+    """Enumeration of funding agencies."""
     CIHR = "CIHR"
     FRQS = "FRQS"
-    OTHER = "Other"
+    NSERC = "NSERC"
 
 class Experience(BaseModel):
     """
@@ -29,40 +29,36 @@ class Experience(BaseModel):
     description: str = Field(..., description="Detailed description of the experience")
     key_skills: List[str] = Field(default_factory=list, description="List of skills acquired")
 
-class GrantRequirement(BaseModel):
+class FundingDefinition(BaseModel):
     """
-    Represents a specific requirement for a grant application.
+    Static information about a funding.
     """
-    id: str = Field(..., description="Unique ID of the requirement")
-    category: str = Field(..., description="Category (e.g., CV, Research Statement)")
-    description: str = Field(..., description="Description of the requirement")
-    max_pages: Optional[int] = Field(None, description="Maximum page count")
-    format_rules: Optional[dict] = Field(None, description="Formatting rules (margins, font, etc.)")
-
-class GrantDefinition(BaseModel):
-    """
-    Static information about a grant.
-    """
-    id: str = Field(..., description="Unique ID of the grant")
-    name: str = Field(..., description="Name of the grant")
-    agency: GrantAgency = Field(..., description="Funding agency")
+    id: str = Field(..., description="Unique ID of the funding")
+    name: str = Field(..., description="Name of the funding")
+    agency: FundingAgency = Field(..., description="Funding agency")
     cycle_year: str = Field(..., description="Cycle year (e.g., 2025-2026)")
     deadline: date = Field(..., description="Application deadline")
-    website_url: HttpUrl = Field(..., description="URL to the grant page")
-    requirements: List[GrantRequirement] = Field(default_factory=list, description="List of requirements")
+    website_url: HttpUrl = Field(..., description="URL to the funding page")
+
+class FundingVision(BaseModel):
+    """
+    Represents a funding agency's vision and mission.
+    """
+    agency: FundingAgency = Field(..., description="Funding agency")
+    description: str = Field(..., description="Vision of the agency (includes objectives, values, mission, etc.)")
 
 class RemixedExperienceRequest(BaseModel):
     """
     Request model for remixing an experience.
     """
     experience: Experience = Field(..., description="The experience to remix")
-    target_grant: GrantDefinition = Field(..., description="The target grant definition")
-    focus_keywords: List[str] = Field(default_factory=list, description="Keywords to emphasize")
+    target_funding: FundingDefinition = Field(..., description="The target funding")
 
 class RemixedExperienceResponse(BaseModel):
     """
     Response model for a remixed experience.
     """
-    original_experience_id: Optional[str] = Field(None, description="ID of the original experience")
-    remixed_description: str = Field(..., description="Rewritten description tailored to the grant")
-    rationale: str = Field(..., description="Explanation of changes made")
+    experience_id: Optional[str] = Field(None, description="ID of the original experience")
+    experience_rating: int = Field(..., description="Rating of the experience (1-10) to the funding agency's vision and requirements")
+    remixed_description: str = Field(..., description="Rewritten description tailored to the funding agency's vision and requirements")
+    rationale: str = Field(..., description="Rationale for the rating")
