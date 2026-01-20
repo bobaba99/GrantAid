@@ -15,11 +15,17 @@ last_updated: 2026-01-19
 # Overview
 
 Cycle: 2025-2026
+
 Value per year: $27,000
+
 Duration: 12 months
+
 Program launch date: 2025-08-29
+
 Deadline: 2025-12-01, 20:00 ET
+
 Conditions: non-renewable
+
 Description: The CGRS M is a scholarship in the Canada Research Training Awards Suite (CRTAS) administered by the Canadian Institutes of Health Research (CIHR), the Natural Sciences and Engineering Research Council of Canada (NSERC) and the Social Sciences and Humanities Research Council (SSHRC). The CRTAS aims to support the next generation of innovators by providing funding and high-quality research training, cultivating research skills, fostering creativity and empowering awardees to make significant contributions to Canada’s research ecosystem, economy and prosperity.
 
 # Objective

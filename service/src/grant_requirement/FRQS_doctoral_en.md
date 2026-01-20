@@ -4,7 +4,7 @@ last_updated: 2026-01-19
 cycle: 2026-2027
 ---
 
-# Lien
+# Liens
 
 https://frq.gouv.qc.ca/programme/bourses-de-doctorat-en-recherche-2026-2027-b2-volet-regulier-et-volet-reintegration-a-la-recherche/
 

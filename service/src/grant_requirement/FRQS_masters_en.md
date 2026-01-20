@@ -4,7 +4,7 @@ last_updated: 2026-01-19
 cycle: 2026-2027
 ---
 
-# Link
+# Links
 
 https://frq.gouv.qc.ca/programme/bourses-de-maitrise-en-recherche-2026-2027-b1-volet-regulier-et-volet-reintegration-a-la-recherche/
 

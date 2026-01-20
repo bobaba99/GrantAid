@@ -4,7 +4,7 @@ last_updated: 2026-01-19
 cycle: 2026-2027
 ---
 
-# Lien
+# Liens
 
 https://frqgouvqcca/programme/bourses-de-maitrise-en-recherche-2026-2027-b1-volet-regulier-et-volet-reintegration-a-la-recherche/
 
@@ -26,8 +26,8 @@ Plus précisément, la bourse de maîtrise a pour objectifs de :
 # Caractéristiques du financement
 
 ## Valeur et durée de la bourse
-La valeur annuelle de la bourse de maîtrise est de 20,000 $.
-Le montant maximal pouvant être alloué est de 40,000 $, ce qui correspond à 6 sessions de financement (6 versements).
+La valeur annuelle de la bourse de maîtrise est de 20,000$.
+Le montant maximal pouvant être alloué est de 40,000$, ce qui correspond à 6 sessions de financement (6 versements).
 
 ## Supplément pour formation à l’extérieur du Québec
 Le supplément pour la formation à l'extérieur du Québec a pour objectif d'aider les personnes candidates à entreprendre ou poursuivre un programme d'études supérieures à l'extérieur du Québec.
@@ -36,7 +36,7 @@ Ce supplément s'adresse uniquement aux personnes candidates qui ont indiqué un
 
 Il est attribué par chaque secteur du FRQ aux dix candidatures qui ont obtenu le meilleur rang dans l'ensemble des comités d'évaluation. Les personnes doivent détenir la citoyenneté canadienne ou la résidence permanente, et avoir une carte RAMQ valide (voir la section 3.6). Toute demande indiquant un lieu de formation situé à l’extérieur du Québec est automatiquement considérée. Les programmes en cotutelle ne sont pas admissibles.
 
-La valeur maximale annuelle de ce supplément est de 1,500 $, soit 500 $ par session.
+La valeur maximale annuelle de ce supplément est de 1,500$, soit 500$ par session.
 
 # Conditions d’admissibilité
 

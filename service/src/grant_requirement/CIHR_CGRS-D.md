@@ -10,11 +10,17 @@ last_updated: 2026-01-19
 # Overview
 
 Cycle: 2025-2026
+
 Value per year: $40,000
+
 Duration: 36 months
+
 Program launch date: 2025-07-08
+
 Deadline: 2026-10-17, 20:00 ET
+
 Conditions: completed no more than 36 months of full-time equivalent study in the doctoral program by December 31 of the calendar year of application
+
 Description: The CGRS D is a scholarship in the Canada Research Training Awards Suite (CRTAS) administered by the Canadian Institutes of Health Research (CIHR), the Natural Sciences and Engineering Research Council of Canada (NSERC) and the Social Sciences and Humanities Research Council (SSHRC). The CRTAS aims to support the next generation of innovators by providing funding and high-quality research training, cultivating research skills, fostering creativity and empowering awardees to make significant contributions to Canada’s research ecosystem, economy and prosperity.
 
 # Objective

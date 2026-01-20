@@ -3,7 +3,7 @@ title: FRQS_en
 last_updated: 2026-01-19
 ---
 
-# Link
+# Links
 
 - [FRQS](https://frq.gouv.qc.ca/en/health/)
 - [CV-FRQ](https://frq.gouv.qc.ca/en/frq-cv/)
