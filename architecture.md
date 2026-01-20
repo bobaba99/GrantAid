@@ -12,7 +12,7 @@ Student would input their:
 
 1. Personal experiences
 2. Professional experiences
-3. Describe research field - one paragraph summary
+3. Research field - one paragraph summary
 4. Research project - one paragraph summary
 
 The web app contains the mission statements/values/objectives from above institutions and document checklists for each application.

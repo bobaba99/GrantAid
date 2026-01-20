@@ -1,126 +1,53 @@
-Generate a responsive web UI for an academic funding application assistant designed for graduate students.
+Generate a responsive web UI for a funding application assistant for graduate students.
 
-The product simplifies funding applications by turning complex requirements into a guided, checklist-driven workflow with document management, deadline tracking, and AI assistance.
+Name: GrantAid
 
-Target users:
+Goal:
+The web app does not handle the actual application process, but instead provides a checklist-driven workflow with document uploads, deadline tracking, and AI help.
 
-* Graduate students (Master’s, PhD)
-* Time-constrained, cognitively overloaded
-* Low tolerance for bureaucratic language
+The AI assistant will evaluate the user's experiences (academic, professional, volunteer, etc.) and rate them on a scale of 1-10 based on their relevance to the funding application and agency's mission. It will also provide suggestions for how experiences should be reframed to better align with the funding application.
 
-Design intent:
-
-* Visual tone: {calm | academic | professional}
-* Emotional tone: {supportive | neutral}
-* Trust level: {high}
-* Complexity: {minimal | moderate}
-* Style reference: modern academic SaaS, similar to Notion + Linear + government portals but less sterile
+Style:
+* Clean, academic, calm
+* Light background
+* Minimal visual noise
 
 Layout:
+* Left sidebar: application checklist
+* Center: active form or editor
+* Right panel: contextual help and AI suggestions
+* Top bar: app title + user profile
 
-* Desktop-first, fully responsive
-* Grid: {12px | 16px}
-* Max width: {1140px | 1280px}
-* Navigation: left sidebar + top bar
-* Sidebar: application list + progress indicators
-* Top bar: user profile, notifications, global search
+Screens:
 
-Colour:
+1. Dashboard
+   * List of applications (only CIHR and FRQS, user cannot add more)
+      * Each experience will be a card with a rating and a suggestion inside the application workspace.
+      * Each experience will be a card with option to edit and delete in profiles.
+   * Status: Not started / In progress / Submitted
 
-* Primary: {#2F5D9F}
-* Secondary: {#3A7F7B}
-* Accent: {#F2A541}
-* Background: {#F8FAFC}
-* Surface: {#FFFFFF}
-* Border: {#E2E8F0}
-* Text primary: {#1F2933}
-* Text secondary: {#4B5563}
-* Success: {#2E7D32}
-* Error: {#C62828}
-* Accessibility target: {WCAG AA}
+2. Application workspace
+   * Three-column layout (sidebar / main / help)
+   * Checklist + form
 
-Typography:
+3. Document manager
+   * Upload CV (via copy and paste)
+   * Describe research field - one paragraph summary
+   * Research project - one paragraph summary
+   * States: missing, uploaded, error
 
-* Font: {Inter | SF Pro | Source Sans}
-* Headings: 600–700
-* Body: 400–500
-* Line height: 1.5
-* Base font size: {16px}
+4. Deadline tracker
+   * Timeline or calendar
 
-Core screens to generate:
-
-1. Landing page
-
-* Headline: “Turn funding applications into a guided checklist”
-* Primary CTA: “Start application”
-* Secondary CTA: “Browse funding opportunities”
-* Visual: dashboard preview mockup
-
-2. Dashboard
-
-* Application cards or table
-* Status: Not started / In progress / Submitted / Awarded
-* Progress: percentage bar + step counter
-* Deadline warning badges
-
-3. Application workspace (main screen)
-   Three-column layout:
-
-* Left: checklist steps
-
-  * Eligibility
-  * Required documents
-  * References
-  * Submission
-* Center: active form/editor panel
-* Right: contextual help panel
-
-  * Plain-language explanations
-  * Examples
-  * AI hints
-
-4. Document manager
-
-* Upload CV, transcripts, proposals, letters
-* States: missing, uploaded, error, validated
-* Drag-and-drop upload UI
-
-5. Deadline tracker
-
-* Timeline view + calendar view
-* Visual urgency encoding near deadlines
-
-6. AI assistance panel
-
-* Rewrite and polish text
-* Summarize requirements
-* Check compliance
-* Must be visually marked as “assistive, not authoritative”
-
-Component requirements:
-
-* Buttons, cards, progress bars, checklists, badges, alerts
-* States: default, hover, loading, success, error, disabled
-* Icon style: {outline}
-
-Interaction principles:
-
-* Every task must feel finite and checkable
-* Reduce jargon; rewrite bureaucratic language into student-friendly language
-* Strong visual progress feedback
-* Errors must be specific and actionable
+UI components:
+* Buttons, cards, badges, alerts
+* Clear success and error states
 
 Accessibility:
-
+* Minimum font size: 16px
 * Keyboard navigable
-* Colour-blind safe
-* Minimum text size: {16px}
-* Clear focus states
 
-Code output requirements:
-
-* Generate semantic HTML + CSS
-* Clean component structure
-* Avoid absolute positioning unless necessary
-* Responsive layout using flexbox or grid
-* Layout must be implementation-ready
+Code:
+* Output semantic HTML + CSS
+* Use flexbox or grid
+* No decorative clutter
