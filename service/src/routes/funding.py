@@ -5,8 +5,10 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel
 from src.dependencies import get_current_user, supabase
 from src.models import (
-    FundingDefinition, FundingAgency
+    FundingDefinition, FundingAgency, Experience, ExperienceAnalysis
 )
+from src.story_teller import StoryTeller
+from src.dependencies import get_story_teller
 
 router = APIRouter()
 
@@ -44,13 +46,61 @@ async def get_funding(funding_id: str, current_user = Depends(get_current_user))
          # If UUID is invalid, supabase might throw.
         raise HTTPException(status_code=404, detail=f"Funding not found or error: {str(e)}")
 
-from src.models import Experience, ExperienceAnalysis
-from src.story_teller import StoryTeller
-from src.dependencies import get_story_teller
+@router.get("/fundings/{funding_id}/analyses", response_model=List[ExperienceAnalysis])
+async def get_funding_analyses(
+    funding_id: str,
+    current_user = Depends(get_current_user)
+):
+    """Get existing analyses for a funding without re-generating"""
+    try:
+        # Fetch analyses
+        analyses_response = supabase.table("experience_analysis")\
+            .select("*")\
+            .eq("user_id", current_user.id)\
+            .eq("funding_id", funding_id)\
+            .execute()
+        
+        if not analyses_response.data:
+            return []
+
+        analyses_data = analyses_response.data
+        experience_ids = [a['experience_id'] for a in analyses_data]
+        
+        # Fetch related experiences
+        experiences_response = supabase.table("experience")\
+            .select("*")\
+            .in_("id", experience_ids)\
+            .execute()
+            
+        experiences_map = {e['id']: Experience(**e) for e in experiences_response.data}
+        
+        results = []
+        from src.models import StoryTellingResponse
+        
+        for item in analyses_data:
+            exp_id = item['experience_id']
+            if exp_id in experiences_map:
+                analysis = StoryTellingResponse(
+                    experience_id=exp_id,
+                    experience_rating=item['experience_rating'],
+                    story=item['story'],
+                    rationale=item['rationale']
+                )
+                results.append(ExperienceAnalysis(
+                    experience=experiences_map[exp_id],
+                    analysis=analysis
+                ))
+                
+        return results
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to fetch analyses: {str(e)}")
+
+
 
 @router.post("/fundings/{funding_id}/analyze-experiences", response_model=List[ExperienceAnalysis])
 def analyze_experiences(
     funding_id: str,
+    force_refresh: bool = False,
     story_teller: StoryTeller = Depends(get_story_teller),
     current_user = Depends(get_current_user)
 ):
@@ -87,7 +137,7 @@ def analyze_experiences(
             experience = Experience(**exp_data)
             
             # Check cache
-            if experience.id in existing_analyses_map:
+            if experience.id in existing_analyses_map and not force_refresh:
                 cached_data = existing_analyses_map[experience.id]
                 analysis = StoryTellingResponse(
                     experience_id=cached_data['experience_id'],
@@ -109,7 +159,7 @@ def analyze_experiences(
                         "rationale": analysis.rationale,
                         "experience_rating": analysis.experience_rating
                     }
-                    supabase.table("experience_analysis").insert(insert_data).execute()
+                    supabase.table("experience_analysis").upsert(insert_data).execute()
                 except Exception as save_err:
                     # Log but don't fail the request if saving fails?
                     # Or maybe fail? Let's log and continue to return the result to user at least.

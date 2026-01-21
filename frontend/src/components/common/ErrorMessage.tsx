@@ -11,19 +11,21 @@ export const ErrorMessage: React.FC<ErrorMessageProps> = ({ message, onClose }) 
     return (
         <div style={{
             position: 'fixed',
-            top: '20px',
+            top: '1rem',
             left: '50%',
             transform: 'translateX(-50%)',
-            backgroundColor: '#fdezea',
-            color: '#c53030',
-            border: '1px solid #c53030',
-            borderRadius: '4px',
-            padding: '1rem',
             zIndex: 1000,
+            backgroundColor: '#fee2e2',
+            border: '1px solid #ef4444',
+            color: '#b91c1c',
+            padding: '1rem',
+            borderRadius: '0.5rem',
+            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
             display: 'flex',
             alignItems: 'center',
             gap: '1rem',
-            boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+            maxWidth: '90%',
+            width: 'auto'
         }}>
             <span>{message}</span>
             <button
@@ -31,14 +33,14 @@ export const ErrorMessage: React.FC<ErrorMessageProps> = ({ message, onClose }) 
                 style={{
                     background: 'none',
                     border: 'none',
-                    color: '#c53030',
-                    fontSize: '1.2rem',
+                    color: '#b91c1c',
                     cursor: 'pointer',
-                    padding: '0 0.5rem',
+                    fontSize: '1.25rem',
+                    padding: '0',
                     lineHeight: 1
                 }}
             >
-                ×
+                &times;
             </button>
         </div>
     );

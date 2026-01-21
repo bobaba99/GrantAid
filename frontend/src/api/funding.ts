@@ -1,4 +1,5 @@
 import { apiClient } from './client';
+import type { Experience } from './experiences';
 
 export interface FundingDefinition {
     id: string;
@@ -27,23 +28,18 @@ export interface StoryTellingResponse {
     rationale: string;
 }
 
-export interface Experience {
-    id: string;
-    type: string;
-    title: string;
-    organization: string;
-    start_date: string;
-    end_date?: string;
-    description: string;
-    key_skills: string[];
-}
-
 export interface ExperienceAnalysis {
     experience: Experience;
     analysis: StoryTellingResponse;
 }
 
-export const analyzeExperiences = async (fundingId: string): Promise<ExperienceAnalysis[]> => {
-    const response = await apiClient.post(`/api/funding/fundings/${fundingId}/analyze-experiences`);
+export const analyzeExperiences = async (fundingId: string, forceRefresh = false): Promise<ExperienceAnalysis[]> => {
+    const url = `/api/funding/fundings/${fundingId}/analyze-experiences${forceRefresh ? '?force_refresh=true' : ''}`;
+    const response = await apiClient.post(url);
+    return response.data;
+};
+
+export const getExperienceAnalyses = async (fundingId: string): Promise<ExperienceAnalysis[]> => {
+    const response = await apiClient.get(`/api/funding/fundings/${fundingId}/analyses`);
     return response.data;
 };

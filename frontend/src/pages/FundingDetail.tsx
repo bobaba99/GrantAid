@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useParams, Link } from 'react-router-dom';
+import ReactMarkdown from 'react-markdown';
 import { getFundingById, type FundingDefinition } from '../api/funding';
+import '../styles/FundingDetail.css';
 
 export function FundingDetail() {
     const { id } = useParams<{ id: string }>();
@@ -30,41 +33,89 @@ export function FundingDetail() {
     if (!funding) return <div>Loading...</div>;
 
     return (
-        <div style={{ padding: '2rem', width: '100%', margin: '0 auto' }}>
-            <h1>{funding.name}</h1>
-            <h3>Agency: {funding.agency}</h3>
-            <p>Cycle: {funding.cycle_year}</p>
-            <p>Deadline: {funding.deadline}</p>
-            <a href={funding.website_url} target="_blank" rel="noreferrer">Official Website</a>
-
-            <div style={{ marginTop: '2rem', textAlign: 'left' }}>
-                <h2>Context / Instructions</h2>
-                <pre style={{ whiteSpace: 'pre-wrap', background: '#f5f5f5', padding: '1rem' }}>
-                    {funding.description || 'No description available.'}
-                </pre>
+        <div className="funding-detail-container">
+            <div className="detail-header">
+                <h1 className="detail-title">{funding.name}</h1>
+                <h2 className="detail-agency">AGENCY: {funding.agency}</h2>
+                <div className="detail-meta-grid">
+                    <div className="meta-item">
+                        <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>calendar_month</span>
+                        Cycle: {funding.cycle_year}
+                    </div>
+                    <div className="meta-item">
+                        <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>schedule</span>
+                        Deadline: {funding.deadline}
+                    </div>
+                </div>
+                <div className="detail-actions">
+                    <a href={funding.website_url} target="_blank" rel="noreferrer" className="external-link">
+                        Official Website
+                        <span className="material-symbols-outlined" style={{ fontSize: '18px', marginLeft: '4px' }}>open_in_new</span>
+                    </a>
+                    {funding.agency.includes('FRQS') && (
+                        <a href="https://www.notion.so/FRQS-2eedc7826a688038a30acfc9b8f2f132?source=copy_link" target="_blank" rel="noreferrer" className="external-link">
+                            Notion FRQ Page
+                            <span className="material-symbols-outlined" style={{ fontSize: '18px', marginLeft: '4px' }}>open_in_new</span>
+                        </a>
+                    )}
+                    {funding.agency.includes('CIHR') && (
+                        <a href="https://www.notion.so/CIHR-2eddc7826a68808685fcfd8310e0b32e?source=copy_link" target="_blank" rel="noreferrer" className="external-link">
+                            Notion CIHR Page
+                            <span className="material-symbols-outlined" style={{ fontSize: '18px', marginLeft: '4px' }}>open_in_new</span>
+                        </a>
+                    )}
+                </div>
             </div>
 
-            <ExperiencesAnalysisSection fundingId={id!} />
+            <div className="split-view-container">
+                <div className="criteria-section">
+                    <h3 className="section-title">Criteria</h3>
+                    <div className="criteria-content markdown-content">
+                        <ReactMarkdown>{funding.description || 'No description available.'}</ReactMarkdown>
+                    </div>
+                </div>
 
-            <div style={{ marginTop: '2rem' }}>
-                <Link to="/fundings">Back to List</Link>
+                <div className="analysis-section">
+                    <ExperiencesAnalysisSection fundingId={id!} />
+                </div>
             </div>
+
+            {createPortal(
+                <Link to="/fundings" className="floating-back-btn" aria-label="Back to List">
+                    <span className="material-symbols-outlined">arrow_back</span>
+                </Link>,
+                document.body
+            )}
         </div>
     );
 }
 
-import { analyzeExperiences, type ExperienceAnalysis } from '../api/funding';
+import { analyzeExperiences, getExperienceAnalyses, type ExperienceAnalysis } from '../api/funding';
 
 function ExperiencesAnalysisSection({ fundingId }: { fundingId: string }) {
     const [analyses, setAnalyses] = useState<ExperienceAnalysis[] | null>(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
 
+    useEffect(() => {
+        if (fundingId) {
+            getExperienceAnalyses(fundingId)
+                .then(data => {
+                    if (data && data.length > 0) {
+                        setAnalyses(data);
+                    }
+                })
+                .catch(err => console.error("Failed to load existing analyses", err));
+        }
+    }, [fundingId]);
+
     const handleAnalyze = async () => {
         setLoading(true);
         setError('');
         try {
-            const data = await analyzeExperiences(fundingId);
+            // If we already have analyses, this is a regeneration
+            const forceRefresh = !!analyses;
+            const data = await analyzeExperiences(fundingId, forceRefresh);
             setAnalyses(data);
         } catch (err) {
             setError('Failed to analyze experiences: ' + String(err));
@@ -74,36 +125,46 @@ function ExperiencesAnalysisSection({ fundingId }: { fundingId: string }) {
     };
 
     return (
-        <div style={{ marginTop: '2rem', borderTop: '1px solid #ccc', paddingTop: '1rem' }}>
-            <h2>My Relevant Experiences</h2>
-            <p>See how your experiences align with this funding opportunity.</p>
+        <div>
+            <h2 className="section-title">My Relevant Experiences</h2>
+            <p style={{ color: 'var(--funding-text-sub)', marginBottom: '1.5rem' }}>See how your experiences align with this funding opportunity.</p>
 
-            {!analyses && !loading && (
-                <button onClick={handleAnalyze} style={{ padding: '0.5rem 1rem', cursor: 'pointer' }}>
-                    Analyze My Experiences
+            {!loading && (
+                <button onClick={handleAnalyze} className="primary-btn">
+                    {analyses ? 'Regenerate Analysis' : 'Analyze My Experiences'}
                 </button>
             )}
 
-            {loading && <p>Analyzing... This may take a few moments.</p>}
-            {error && <p style={{ color: 'red' }}>{error}</p>}
+            {loading && (
+                <div style={{ padding: '2rem', textAlign: 'center', color: 'var(--funding-text-sub)' }}>
+                    <span className="material-symbols-outlined" style={{ fontSize: '48px', animation: 'spin 1s linear infinite' }}>sync</span>
+                    <p>Analyzing... This may take a few moments.</p>
+                </div>
+            )}
+
+            {error && <p style={{ color: '#ef4444', marginBottom: '1rem' }}>{error}</p>}
 
             {analyses && (
-                <div style={{ display: 'grid', gap: '1rem', marginTop: '1rem' }}>
+                <div style={{ display: 'grid', gap: '1.5rem', marginTop: '1rem' }}>
                     {analyses.map(({ experience, analysis }) => (
-                        <div key={experience.id} style={{ border: '1px solid #ddd', padding: '1rem', borderRadius: '8px' }}>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                <h3>{experience.title} at {experience.organization}</h3>
-                                <div style={{
-                                    background: analysis.experience_rating >= 8 ? '#d4edda' : analysis.experience_rating >= 5 ? '#fff3cd' : '#f8d7da',
-                                    padding: '0.5rem', borderRadius: '4px', fontWeight: 'bold'
+                        <div key={experience.id} className="analysis-card">
+                            <div className="analysis-header">
+                                <h3 style={{ margin: 0, fontSize: '1.1rem', color: 'var(--funding-text-main)' }}>{experience.title} at {experience.organization}</h3>
+                                <div className="analysis-rating" style={{
+                                    background: analysis.experience_rating >= 8 ? '#dcfce7' : analysis.experience_rating >= 5 ? '#fef9c3' : '#fee2e2',
+                                    color: analysis.experience_rating >= 8 ? '#166534' : analysis.experience_rating >= 5 ? '#854d0e' : '#991b1b'
                                 }}>
                                     Rating: {analysis.experience_rating}/10
                                 </div>
                             </div>
-                            <p><strong>Original:</strong> {experience.description}</p>
-                            <div style={{ background: '#f9f9f9', padding: '1rem', marginTop: '1rem' }}>
-                                <p><strong>Story:</strong> {analysis.story}</p>
-                                <p><strong>Rationale:</strong> <i>{analysis.rationale}</i></p>
+                            <p style={{ textAlign: 'left', fontSize: '0.95rem', color: 'var(--funding-text-sub)', marginBottom: '1rem' }}><strong>Original:</strong> {experience.description}</p>
+                            <div className="analysis-content">
+                                <p style={{ textAlign: 'left', lineHeight: '2', marginBottom: '1rem', color: 'var(--funding-text-main)' }}>
+                                    <strong style={{ color: 'var(--funding-primary)', lineHeight: '2' }}>Story:</strong><br /> {analysis.story}
+                                </p>
+                                <p style={{ textAlign: 'left', lineHeight: '2', color: 'var(--funding-text-main)' }}>
+                                    <strong style={{ color: 'var(--funding-primary)', lineHeight: '2' }}>Rationale:</strong><br /> <i>{analysis.rationale}</i>
+                                </p>
                             </div>
                         </div>
                     ))}

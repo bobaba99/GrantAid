@@ -1,74 +1,122 @@
+:root {
+    --funding-primary: #36544e;
+    --funding-primary-hover: #2a423d;
+    --funding-bg: #f8fafc;
+    --funding-card-bg: #ffffff;
+    --funding-text-main: #1e293b;
+    --funding-text-sub: #64748b;
+    --funding-border: #e2e8f0;
+    --funding-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --funding-shadow-hover: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
 .funding-container {
     padding: 2rem;
     max-width: 1200px;
     margin: 0 auto;
     width: 100%;
+    font-family: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
 .funding-title {
     font-size: 2.5rem;
-    margin-bottom: 2rem;
-    color: #333;
-    text-align: left;
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+    color: var(--funding-primary);
+    text-align: center;
+    /* Matching Profile Header centering */
+    letter-spacing: -0.02em;
+}
+
+.funding-subtitle {
+    text-align: center;
+    color: var(--funding-text-sub);
+    margin-bottom: 3rem;
+    font-size: 1.1rem;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .funding-grid {
     display: grid;
     gap: 1.5rem;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
 }
 
 .funding-card {
-    border: 1px solid #e0e0e0;
+    border: 1px solid var(--funding-border);
     padding: 1.5rem;
-    border-radius: 8px;
-    background: #fff;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    border-radius: 1rem;
+    background: var(--funding-card-bg);
+    box-shadow: var(--funding-shadow);
     text-align: left;
-    transition: transform 0.2s, box-shadow 0.2s;
+    transition: all 0.2s ease;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    position: relative;
+    overflow: hidden;
+}
+
+.funding-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, var(--funding-primary), #64748b);
+    opacity: 0;
+    transition: opacity 0.2s;
 }
 
 .funding-card:hover {
     transform: translateY(-4px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-    border-color: #646cff;
-    /* Highlight border on hover */
+    box-shadow: var(--funding-shadow-hover);
+    border-color: var(--funding-primary);
+}
+
+.funding-card:hover::before {
+    opacity: 1;
 }
 
 .funding-card h2 {
     font-size: 1.25rem;
+    font-weight: 700;
     margin: 0 0 0.5rem 0;
-    color: #2c3e50;
+    color: var(--funding-text-main);
 }
 
 .funding-agency {
-    color: #666;
-    font-size: 0.9rem;
+    color: var(--funding-text-sub);
+    font-size: 0.875rem;
     margin-bottom: 1rem;
-    font-weight: 500;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
 }
 
 .funding-details p {
     margin: 0.5rem 0;
-    color: #444;
+    color: var(--funding-text-main);
     font-size: 0.95rem;
 }
 
 .view-details-link {
-    display: inline-block;
-    margin-top: 1rem;
+    display: inline-flex;
+    align-items: center;
+    margin-top: 1.5rem;
     text-decoration: none;
-    color: #646cff;
-    font-weight: 500;
+    color: var(--funding-primary);
+    font-weight: 600;
     align-self: flex-start;
     transition: color 0.2s;
+    font-size: 0.95rem;
 }
 
 .view-details-link:hover {
-    color: #535bf2;
+    color: var(--funding-primary-hover);
     text-decoration: underline;
 }
 
@@ -77,31 +125,17 @@
     text-align: left;
 }
 
-/* Dark mode support matching other components */
+/* Dark mode support */
 @media (prefers-color-scheme: dark) {
+    :root {
+        --funding-bg: #0f172a;
+        --funding-card-bg: #1e293b;
+        --funding-text-main: #f1f5f9;
+        --funding-text-sub: #94a3b8;
+        --funding-border: #334155;
+    }
+
     .funding-title {
-        color: #eee;
-    }
-
-    .funding-card {
-        background: #2a2a2a;
-        border-color: #333;
-    }
-
-    .funding-card:hover {
-        border-color: #646cff;
-        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-    }
-
-    .funding-card h2 {
-        color: #e0e0e0;
-    }
-
-    .funding-agency {
-        color: #aaa;
-    }
-
-    .funding-details p {
-        color: #ccc;
+        color: #f1f5f9;
     }
 }

@@ -16,6 +16,16 @@ class FundingAgency(str, Enum):
     FRQS = "FRQS"
     NSERC = "NSERC"
 
+class UserProfile(BaseModel):
+    """
+    Represents a user's profile information.
+    """
+    full_name: Optional[str] = Field(None, description="User's full name")
+    program_level: Optional[str] = Field(None, description="Current program level (e.g. PhD, Masters)")
+    research_field: Optional[str] = Field(None, description="Broad field of research")
+    research_focus: Optional[str] = Field(None, description="Specific research focus or topic")
+    institution: Optional[str] = Field(None, description="Academic institution")
+
 class Experience(BaseModel):
     """
     Represents a user's experience (professional, academic, etc.).

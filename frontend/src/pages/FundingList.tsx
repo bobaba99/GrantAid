@@ -29,6 +29,7 @@ export function FundingList() {
     return (
         <div className="funding-container">
             <h1 className="funding-title">Available Fundings</h1>
+            <br></br>
             <div className="funding-grid">
                 {fundings.map((f) => (
                     <div key={f.id} className="funding-card">

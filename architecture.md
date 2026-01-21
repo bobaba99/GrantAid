@@ -88,4 +88,4 @@ Compile in Docker: `docker-compose up --build`
 # Future Improvements
 
 - [ ] Refined 1-10 rating criteria for funding applications
-- [ ] Beautify UI
+- [x] Beautify UI

@@ -14,3 +14,7 @@ export const getUserProfile = async (): Promise<UserProfile> => {
     const response = await apiClient.get('/me');
     return response.data;
 };
+
+export const updateUserProfile = async (profile: Partial<UserProfile>): Promise<void> => {
+    await apiClient.put('/me', profile);
+};

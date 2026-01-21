@@ -5,7 +5,7 @@ from pydantic import BaseModel
 
 from src.models import (
     Experience, FundingDefinition, StoryTellingRequest, 
-    StoryTellingResponse
+    StoryTellingResponse, UserProfile
 )
 from src.story_teller import StoryTeller
 from src.utils import get_logger, format_error_response
@@ -55,6 +55,36 @@ def read_current_user(user = Depends(get_current_user)):
         "research_focus": profile_data.get("research_focus", ""),
         "institution": profile_data.get("institution", "")
     }
+
+@app.put("/me")
+def update_current_user(
+    profile: UserProfile,
+    user = Depends(get_current_user)
+):
+    """
+    Update the authenticated user's profile information.
+    """
+    try:
+        profile_data = profile.dict(exclude_none=True)
+        profile_data["id"] = user.id
+        # Also store email if not present in profiles table? 
+        # Usually profiles table is linked by id. Let's just upsert the fields.
+        
+        # Upsert into profiles table
+        response = supabase.table("profiles").upsert(profile_data).execute()
+        
+        if not response.data:
+            # If nothing returned, it might check if success anyway
+            pass
+
+        return {
+            "status": "success",
+            "message": "Profile updated successfully",
+            "data": profile_data
+        }
+    except Exception as e:
+        logger.error(f"Failed to update profile for {user.id}: {e}")
+        raise HTTPException(status_code=500, detail=f"Failed to update profile: {str(e)}")
 
 
 @app.post("/story-tell", response_model=StoryTellingResponse)

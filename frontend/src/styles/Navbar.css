@@ -1,0 +1,92 @@
+/* Navbar Container */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background-color: #ffffff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2rem;
+    border-radius: 8px;
+    /* Optional: adds a slight modern touch if not full width */
+}
+
+/* Navigation Links Container */
+.nav-links {
+    display: flex;
+    gap: 2rem;
+}
+
+/* Individual Navigation Links */
+.nav-link {
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 1rem;
+    color: #213547;
+    padding: 0.5rem 0;
+    border-bottom: 2px solid transparent;
+    transition: all 0.3s ease;
+}
+
+/* Hover Effect */
+.nav-link:hover {
+    color: #36544e;
+    border-bottom-color: #36544e;
+    /* Underline effect on hover */
+}
+
+/* Active State (current page) */
+.nav-link.active {
+    color: #36544e;
+    font-weight: 700;
+    border-bottom-color: #36544e;
+}
+
+/* Sign Out Button */
+.sign-out-btn {
+    background-color: transparent;
+    color: #2c3e50;
+    /* Distinct from nav links */
+    border: 1px solid #ccc;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.sign-out-btn:hover {
+    background-color: #fceceb;
+    /* Subtle red tint on hover to imply exit/logout */
+    color: #e74c3c;
+    border-color: #e74c3c;
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+    .navbar {
+        background-color: #2a2a2a;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .nav-link {
+        color: #a8aeff;
+    }
+
+    .nav-link:hover,
+    .nav-link.active {
+        color: #8c93ff;
+        border-bottom-color: #8c93ff;
+    }
+
+    .sign-out-btn {
+        border-color: #555;
+        color: #e0e0e0;
+    }
+
+    .sign-out-btn:hover {
+        background-color: #3e2828;
+        color: #ff6b6b;
+        border-color: #ff6b6b;
+    }
+}

@@ -35,7 +35,7 @@ async def update_experience(
 ):
     """Update existing experience"""
     # Exclude ID from update data to avoid changing it (though it matches param)
-    data = experience.dict(exclude={"id", "user_id"}, exclude_none=True)
+    data = experience.dict(exclude={"id", "user_id"}, exclude_none=False)
     updated = await service.update_experience(experience_id, current_user.id, data)
     if not updated:
         raise HTTPException(status_code=404, detail="Experience not found or not authorized")

@@ -1,0 +1,245 @@
+:root {
+    --funding-primary: #36544e;
+    --funding-primary-hover: #2a423d;
+    --funding-bg: #f8fafc;
+    --funding-card-bg: #ffffff;
+    --funding-text-main: #1e293b;
+    --funding-text-sub: #64748b;
+    --funding-border: #e2e8f0;
+    --funding-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.funding-detail-container {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+    font-family: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    color: var(--funding-text-main);
+}
+
+.detail-header {
+    margin-bottom: 2rem;
+    border-bottom: 1px solid var(--funding-border);
+    padding-bottom: 2rem;
+}
+
+.detail-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--funding-primary);
+    margin-bottom: 0.5rem;
+    text-align: left;
+    letter-spacing: -0.02em;
+}
+
+.detail-agency {
+    font-size: 1.25rem;
+    color: var(--funding-text-sub);
+    font-weight: 600;
+    margin-bottom: 1rem;
+    text-align: left;
+}
+
+.detail-meta-grid {
+    display: flex;
+    gap: 2rem;
+    margin-bottom: 1.5rem;
+    color: var(--funding-text-sub);
+    font-size: 0.95rem;
+}
+
+.meta-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.detail-actions {
+    display: flex;
+    gap: 1rem;
+}
+
+.external-link {
+    display: inline-flex;
+    align-items: center;
+    color: var(--funding-primary);
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.external-link:hover {
+    color: var(--funding-primary-hover);
+    text-decoration: underline;
+}
+
+.split-view-container {
+    display: flex;
+    gap: 2rem;
+    margin-top: 2rem;
+    align-items: flex-start;
+}
+
+.criteria-section,
+.analysis-section {
+    flex: 1;
+    text-align: left;
+}
+
+.section-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--funding-primary);
+    margin-bottom: 1rem;
+}
+
+.criteria-content {
+    border: 1px solid var(--funding-border);
+    padding: 1.5rem;
+    border-radius: 1rem;
+    background: var(--funding-card-bg);
+    box-shadow: var(--funding-shadow);
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+.analysis-card {
+    border: 1px solid var(--funding-border);
+    padding: 1.5rem;
+    border-radius: 1rem;
+    background: var(--funding-card-bg);
+    box-shadow: var(--funding-shadow);
+    margin-bottom: 1rem;
+}
+
+.analysis-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.analysis-rating {
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.5rem;
+    font-weight: 700;
+    font-size: 0.9rem;
+}
+
+.analysis-content {
+    background: var(--funding-bg);
+    padding: 1rem;
+    border-radius: 0.5rem;
+    margin-top: 1rem;
+}
+
+.primary-btn {
+    background-color: var(--funding-primary);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.primary-btn:hover {
+    background-color: var(--funding-primary-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.back-link {
+    display: inline-block;
+    margin-top: 2rem;
+    color: var(--funding-text-sub);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.back-link:hover {
+    color: var(--funding-primary);
+}
+
+/* Dark mode */
+/* Dark mode */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --funding-bg: #0f172a;
+        --funding-card-bg: #1e293b;
+        --funding-text-main: #f1f5f9;
+        --funding-text-sub: #94a3b8;
+    }
+}
+
+/* Floating Back Button */
+.floating-back-btn {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    background-color: var(--funding-primary);
+    color: white;
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s ease;
+    z-index: 9999;
+    /* Ensure it's on top */
+    text-decoration: none;
+}
+
+.floating-back-btn:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    background-color: var(--funding-primary-hover);
+    color: white;
+}
+
+.floating-back-btn .material-symbols-outlined {
+    font-size: 24px;
+}
+
+/* Tooltip for floating back button */
+.floating-back-btn::after {
+    content: 'Back to List';
+    position: absolute;
+    right: 120%;
+    top: 50%;
+    transform: translateY(-50%) translateX(10px);
+    background-color: #1e293b;
+    color: white;
+    padding: 0.5rem 0.8rem;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    visibility: hidden;
+}
+
+.floating-back-btn:hover::after {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(-50%) translateX(0);
+}
+
+/* Spin Animation */
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
