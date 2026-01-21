@@ -1,0 +1,107 @@
+.funding-container {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.funding-title {
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    color: #333;
+    text-align: left;
+}
+
+.funding-grid {
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+}
+
+.funding-card {
+    border: 1px solid #e0e0e0;
+    padding: 1.5rem;
+    border-radius: 8px;
+    background: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    text-align: left;
+    transition: transform 0.2s, box-shadow 0.2s;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.funding-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    border-color: #646cff;
+    /* Highlight border on hover */
+}
+
+.funding-card h2 {
+    font-size: 1.25rem;
+    margin: 0 0 0.5rem 0;
+    color: #2c3e50;
+}
+
+.funding-agency {
+    color: #666;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+    font-weight: 500;
+}
+
+.funding-details p {
+    margin: 0.5rem 0;
+    color: #444;
+    font-size: 0.95rem;
+}
+
+.view-details-link {
+    display: inline-block;
+    margin-top: 1rem;
+    text-decoration: none;
+    color: #646cff;
+    font-weight: 500;
+    align-self: flex-start;
+    transition: color 0.2s;
+}
+
+.view-details-link:hover {
+    color: #535bf2;
+    text-decoration: underline;
+}
+
+.back-link-container {
+    margin-top: 2rem;
+    text-align: left;
+}
+
+/* Dark mode support matching other components */
+@media (prefers-color-scheme: dark) {
+    .funding-title {
+        color: #eee;
+    }
+
+    .funding-card {
+        background: #2a2a2a;
+        border-color: #333;
+    }
+
+    .funding-card:hover {
+        border-color: #646cff;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    }
+
+    .funding-card h2 {
+        color: #e0e0e0;
+    }
+
+    .funding-agency {
+        color: #aaa;
+    }
+
+    .funding-details p {
+        color: #ccc;
+    }
+}

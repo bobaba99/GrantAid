@@ -25,3 +25,8 @@ export const createExperience = async (experience: Omit<Experience, 'id'>): Prom
 export const deleteExperience = async (id: string): Promise<void> => {
     await apiClient.delete(`/api/experiences/${id}`);
 };
+
+export const updateExperience = async (id: string, experience: Partial<Experience>): Promise<Experience> => {
+    const response = await apiClient.put(`/api/experiences/${id}`, experience);
+    return response.data;
+};

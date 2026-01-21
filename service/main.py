@@ -10,7 +10,7 @@ from src.models import (
 from src.story_teller import StoryTeller
 from src.utils import get_logger, format_error_response
 from src.dependencies import (
-    get_current_user, get_story_teller
+    get_current_user, get_story_teller, supabase
 )
 from src.routes import funding
 
@@ -37,7 +37,24 @@ def read_root():
 
 @app.get("/me")
 def read_current_user(user = Depends(get_current_user)):
-    return {"id": user.id, "email": user.email}
+    try:
+        # Check 'profiles' table for additional info
+        profile_response = supabase.table("profiles").select("*").eq("id", user.id).single().execute()
+        profile_data = profile_response.data if profile_response.data else {}
+    except Exception as e:
+        logger.warning(f"Could not fetch profile for {user.id}: {e}")
+        profile_data = {}
+
+    # Merge auth email (authoritative) with profile data
+    return {
+        "id": user.id, 
+        "email": user.email,
+        "full_name": profile_data.get("full_name", ""),
+        "program_level": profile_data.get("program_level", ""),
+        "research_field": profile_data.get("research_field", ""),
+        "research_focus": profile_data.get("research_focus", ""),
+        "institution": profile_data.get("institution", "")
+    }
 
 
 @app.post("/story-tell", response_model=StoryTellingResponse)

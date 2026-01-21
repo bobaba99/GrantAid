@@ -26,6 +26,21 @@ async def create_experience(
     """Create new experience entry"""
     return await service.create_experience(current_user.id, experience)
 
+@router.put("/experiences/{experience_id}", response_model=Experience)
+async def update_experience(
+    experience_id: str,
+    experience: Experience,
+    current_user = Depends(get_current_user),
+    service: ExperienceService = Depends(get_experience_service)
+):
+    """Update existing experience"""
+    # Exclude ID from update data to avoid changing it (though it matches param)
+    data = experience.dict(exclude={"id", "user_id"}, exclude_none=True)
+    updated = await service.update_experience(experience_id, current_user.id, data)
+    if not updated:
+        raise HTTPException(status_code=404, detail="Experience not found or not authorized")
+    return updated
+
 @router.delete("/experiences/{experience_id}", status_code=204)
 async def delete_experience(
     experience_id: str,

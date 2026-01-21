@@ -41,6 +41,7 @@ class ExperienceService:
         return Experience(**response.data[0])
 
     async def update_experience(self, experience_id: str, user_id: str, experience_data: dict) -> Optional[Experience]:
+        experience_data = sanitize_json_response(experience_data)
         response = supabase.table("experience").update(experience_data).eq("id", experience_id).eq("user_id", user_id).execute()
         if not response.data:
              return None

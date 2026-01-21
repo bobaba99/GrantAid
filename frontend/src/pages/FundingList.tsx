@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { getFundings, type FundingDefinition } from '../api/funding';
+import '../styles/FundingList.css';
 
 export function FundingList() {
     const [fundings, setFundings] = useState<FundingDefinition[]>([]);
@@ -17,7 +18,7 @@ export function FundingList() {
             return (
                 <div style={{ padding: '2rem', color: 'red' }}>
                     <h2>Authentication Required</h2>
-                    <p>Your session has expired or is invalid (did you reset the database?).</p>
+                    <p>Your session has expired or is invalid.</p>
                     <Link to="/">Go to Auth Home to Login/Signup</Link>
                 </div>
             );
@@ -26,19 +27,22 @@ export function FundingList() {
     }
 
     return (
-        <div style={{ padding: '2rem' }}>
-            <h1>Available Grants</h1>
-            <div style={{ display: 'grid', gap: '1rem' }}>
+        <div className="funding-container">
+            <h1 className="funding-title">Available Fundings</h1>
+            <div className="funding-grid">
                 {fundings.map((f) => (
-                    <div key={f.id} style={{ border: '1px solid #ccc', padding: '1rem' }}>
-                        <h2>{f.name} ({f.agency})</h2>
-                        <p>Deadline: {f.deadline}</p>
-                        <Link to={`/funding/${f.id}`}>View Details</Link>
+                    <div key={f.id} className="funding-card">
+                        <div>
+                            <h2>{f.name}</h2>
+                            <div className="funding-agency">{f.agency}</div>
+                            <div className="funding-details">
+                                <p><strong>Cycle:</strong> {f.cycle_year}</p>
+                                <p><strong>Deadline:</strong> {f.deadline}</p>
+                            </div>
+                        </div>
+                        <Link to={`/funding/${f.id}`} className="view-details-link">View Details</Link>
                     </div>
                 ))}
-            </div>
-            <div style={{ marginTop: '2rem' }}>
-                <Link to="/">Back to Home</Link>
             </div>
         </div>
     );

@@ -30,7 +30,7 @@ export function FundingDetail() {
     if (!funding) return <div>Loading...</div>;
 
     return (
-        <div style={{ padding: '2rem', maxWidth: '800px', margin: '0 auto' }}>
+        <div style={{ padding: '2rem', width: '100%', margin: '0 auto' }}>
             <h1>{funding.name}</h1>
             <h3>Agency: {funding.agency}</h3>
             <p>Cycle: {funding.cycle_year}</p>
