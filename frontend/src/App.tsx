@@ -10,13 +10,16 @@ import { Profile } from './pages/Profile';
 import { ErrorMessage } from './components/common/ErrorMessage';
 import { supabase } from './api/auth';
 import type { Session } from '@supabase/supabase-js';
-
 import { Login } from './pages/Login';
+import { SuccessModal } from './components/common/SuccessModal';
 
 function App() {
   const navigate = useNavigate();
   const [session, setSession] = useState<Session | null>(null);
   const [errorMessage, setErrorMessage] = useState<string>('');
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [justSignedUp, setJustSignedUp] = useState(false);
+  const [userEmail, setUserEmail] = useState('');
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -34,7 +37,10 @@ function App() {
 
   const handleSignUp = async (email: string, pass: string) => {
     try {
+      setUserEmail(email);
       await signUp(email, pass);
+      setJustSignedUp(true);
+      setShowSuccessModal(true);
     } catch (error: any) {
       console.error('Sign Up Error:', error);
       setErrorMessage(error.message || 'Error signing up');
@@ -60,20 +66,28 @@ function App() {
     }
   };
 
-  if (!session) {
+  const closeSuccessModal = () => {
+    setShowSuccessModal(false);
+    setJustSignedUp(false);
+    // Redirect logic is handled by state change causing re-render into the session block
+  };
+
+  if (!session || justSignedUp) {
     return (
-      <>
+      <div className="login-container-wrapper" style={{ position: 'relative', width: '100%', minHeight: '100vh' }}>
         <ErrorMessage message={errorMessage} onClose={() => setErrorMessage('')} />
+        {showSuccessModal && <SuccessModal email={userEmail} onClose={closeSuccessModal} />}
         <Routes>
           <Route path="*" element={<Login onSignIn={handleSignIn} onSignUp={handleSignUp} />} />
         </Routes>
-      </>
+      </div>
     );
   }
 
   return (
     <div className="container" style={{ width: '100%', margin: '0 auto', padding: '2rem', textAlign: 'center' }}>
       <ErrorMessage message={errorMessage} onClose={() => setErrorMessage('')} />
+      {showSuccessModal && <SuccessModal email={userEmail} onClose={closeSuccessModal} />}
       <nav className="navbar">
         <div className="nav-links">
           <NavLink

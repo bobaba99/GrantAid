@@ -15,7 +15,7 @@ services:
         sync: false
 
   # Frontend (Vite/React) - Static Site
-  - type: cron
+  - type: static
     name: grantaid-frontend
     region: oregon
     buildCommand: cd frontend && npm install && npm run build
