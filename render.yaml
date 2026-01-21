@@ -14,10 +14,12 @@ services:
       - key: SUPABASE_KEY
         sync: false
 
-  # Frontend (Next.js) - Placeholder Configuration
-  # Once initialized, this would likely be:
-  # - type: web
-  #   name: grantaid-frontend
-  #   env: node
-  #   buildCommand: cd frontend && npm install && npm run build
-  #   startCommand: cd frontend && npm start
+  # Frontend (Vite/React) - Static Site
+  - type: cron
+    name: grantaid-frontend
+    region: oregon
+    buildCommand: cd frontend && npm install && npm run build
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
