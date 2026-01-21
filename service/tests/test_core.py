@@ -1,18 +1,18 @@
 from unittest.mock import MagicMock
-from src.remixer import ExperienceRemixer
+from src.story_teller import StoryTeller
 from src.models import Experience, ExperienceType, FundingDefinition, FundingAgency
 from datetime import date
 
-def test_remixer_flow():
-    """Test the remixer calls the LLM correctly."""
+def test_story_teller_flow():
+    """Test the story teller calls the LLM correctly."""
     mock_llm = MagicMock()
     mock_llm.generate_structured_data.return_value = {
         "experience_rating": 9,
-        "remixed_description": "Better description",
+        "story": "Better description",
         "rationale": "Because it is better"
     }
     
-    remixer = ExperienceRemixer(mock_llm)
+    story_teller = StoryTeller(mock_llm)
     
     exp = Experience(
         id="123",
@@ -32,9 +32,9 @@ def test_remixer_flow():
         website_url="https://example.com"
     )
     
-    result = remixer.remix_experience(exp, funding)
+    result = story_teller.tell_story(exp, funding)
     
-    assert result.remixed_description == "Better description"
+    assert result.story == "Better description"
     assert result.experience_id == "123"
     assert result.experience_rating == 9
     mock_llm.generate_structured_data.assert_called_once()

@@ -9,7 +9,7 @@ This directory contains the core business logic for the GrantAid Python service.
 **Key Classes**:
 - `Experience`: User's professional/academic history.
 - `GrantDefinition`: Static info about grants.
-- `RemixedExperienceRequest`: Payload for the LLM remixer.
+- `StoryTellingRequest`: Payload for the LLM story teller.
 
 ### `utils.py`
 **Purpose**: Shared utility functions.
@@ -18,13 +18,10 @@ This directory contains the core business logic for the GrantAid Python service.
 - `sanitize_json_response`: JSON serialization helper for dates.
 - `format_error_response`: Standard error formatting.
 
-### `llm_client.py` (Planned)
+### `llm_client.py`
 **Purpose**: Handles interactions with Google GenAI (Gemini).
 
-### `remixer.py` (Planned)
+### `story_teller.py`
 **Purpose**: Contains logic to rewrite user experiences based on grant requirements.
-
-### `diff_engine.py` (Planned)
-**Purpose**: Compares different versions of grant requirements (e.g., year-over-year changes).
 
 

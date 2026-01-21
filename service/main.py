@@ -4,13 +4,13 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 from src.models import (
-    Experience, FundingDefinition, RemixedExperienceRequest, 
-    RemixedExperienceResponse
+    Experience, FundingDefinition, StoryTellingRequest, 
+    StoryTellingResponse
 )
-from src.remixer import ExperienceRemixer
+from src.story_teller import StoryTeller
 from src.utils import get_logger, format_error_response
 from src.dependencies import (
-    get_current_user, get_remixer
+    get_current_user, get_story_teller
 )
 from src.routes import funding
 
@@ -40,18 +40,18 @@ def read_current_user(user = Depends(get_current_user)):
     return {"id": user.id, "email": user.email}
 
 
-@app.post("/remix", response_model=RemixedExperienceResponse)
-def remix_experience(
-    request: RemixedExperienceRequest,
-    remixer: ExperienceRemixer = Depends(get_remixer),
+@app.post("/story-tell", response_model=StoryTellingResponse)
+def tell_story(
+    request: StoryTellingRequest,
+    story_teller: StoryTeller = Depends(get_story_teller),
     user = Depends(get_current_user)
 ):
     """
     Rewrites an experience to match a funding's requirements using LLM.
     """
     try:
-        logger.info(f"Remixing experience for funding: {request.target_funding.name} (User: {user.email})")
-        return remixer.remix_experience(
+        logger.info(f"Telling story for funding: {request.target_funding.name} (User: {user.email})")
+        return story_teller.tell_story(
             request.experience, 
             request.target_funding
         )

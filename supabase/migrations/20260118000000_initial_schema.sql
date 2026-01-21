@@ -100,3 +100,25 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 CREATE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users
   FOR EACH ROW EXECUTE PROCEDURE public.handle_new_user();
+
+-- 5. Experience Analysis (LLM Output)
+CREATE TABLE IF NOT EXISTS public.experience_analysis (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+    experience_id UUID NOT NULL REFERENCES public.experience(id) ON DELETE CASCADE,
+    funding_id UUID NOT NULL REFERENCES public.funding(id) ON DELETE CASCADE,
+    story TEXT NOT NULL,
+    rationale TEXT NOT NULL,
+    experience_rating INTEGER NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
+    UNIQUE(experience_id, funding_id)
+);
+
+-- Enable RLS
+ALTER TABLE public.experience_analysis ENABLE ROW LEVEL SECURITY;
+
+-- Policies
+CREATE POLICY "Users can all actions on own analyses"
+ON public.experience_analysis
+FOR ALL
+USING (auth.uid() = user_id);

@@ -1,18 +1,17 @@
-from typing import List
-from src.models import Experience, FundingDefinition, RemixedExperienceResponse
+from src.models import Experience, FundingDefinition, StoryTellingResponse
 from src.llm_client import LLMClient
-from src.utils import get_logger, sanitize_json_response, load_grant_context
+from src.utils import get_logger, load_grant_context
 
 logger = get_logger(__name__)
 
-class ExperienceRemixer:
+class StoryTeller:
     """
     Logic for rewriting user experiences to match funding requirements using an LLM.
     """
     def __init__(self, llm_client: LLMClient):
         self.llm = llm_client
 
-    def remix_experience(self, experience: Experience, target_funding: FundingDefinition) -> RemixedExperienceResponse:
+    def tell_story(self, experience: Experience, target_funding: FundingDefinition) -> StoryTellingResponse:
         """
         Rewrites an experience description to align with a specific funding's values, and provides a rating.
         
@@ -21,37 +20,37 @@ class ExperienceRemixer:
             target_funding: The funding to tailor the experience for.
             
         Returns:
-            RemixedExperienceResponse: The rewritten description, rating, and rationale.
+            StoryTellingResponse: The rewritten description, rating, and rationale.
         """
-        logger.info(f"Remixing experience {experience.id} for funding {target_funding.name}")
+        logger.info(f"Telling story for experience {experience.id} for funding {target_funding.name}")
         
-        prompt = self._build_remix_prompt(experience, target_funding)
+        prompt = self._build_story_prompt(experience, target_funding)
         
         # Define the expected JSON schema for the LLM
         schema = {
             "type": "OBJECT",
             "properties": {
                 "experience_rating": {"type": "INTEGER"},
-                "remixed_description": {"type": "STRING"},
+                "story": {"type": "STRING"},
                 "rationale": {"type": "STRING"}
             },
-            "required": ["experience_rating", "remixed_description", "rationale"]
+            "required": ["experience_rating", "story", "rationale"]
         }
         
         try:
             result = self.llm.generate_structured_data(prompt, schema)
             
-            return RemixedExperienceResponse(
+            return StoryTellingResponse(
                 experience_id=experience.id,
                 experience_rating=result["experience_rating"],
-                remixed_description=result["remixed_description"],
+                story=result["story"],
                 rationale=result["rationale"]
             )
         except Exception as e:
-            logger.error(f"Failed to remix experience: {e}")
+            logger.error(f"Failed to tell story: {e}")
             raise
 
-    def _build_remix_prompt(self, experience: Experience, funding: FundingDefinition) -> str:
+    def _build_story_prompt(self, experience: Experience, funding: FundingDefinition) -> str:
         """
         Constructs the prompt for the LLM.
         """

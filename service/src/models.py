@@ -48,18 +48,25 @@ class FundingVision(BaseModel):
     agency: FundingAgency = Field(..., description="Funding agency")
     description: str = Field(..., description="Vision of the agency (includes objectives, values, mission, etc.)")
 
-class RemixedExperienceRequest(BaseModel):
+class StoryTellingRequest(BaseModel):
     """
-    Request model for remixing an experience.
+    Request model for telling a story based on an experience.
     """
-    experience: Experience = Field(..., description="The experience to remix")
+    experience: Experience = Field(..., description="The experience to use as a base")
     target_funding: FundingDefinition = Field(..., description="The target funding")
 
-class RemixedExperienceResponse(BaseModel):
+class StoryTellingResponse(BaseModel):
     """
-    Response model for a remixed experience.
+    Response model for a told story.
     """
     experience_id: Optional[str] = Field(None, description="ID of the original experience")
     experience_rating: int = Field(..., description="Rating of the experience (1-10) to the funding agency's vision and requirements")
-    remixed_description: str = Field(..., description="Rewritten description tailored to the funding agency's vision and requirements")
+    story: str = Field(..., description="Rewritten description tailored to the funding agency's vision and requirements")
     rationale: str = Field(..., description="Rationale for the rating")
+
+class ExperienceAnalysis(BaseModel):
+    """
+    Composite model containing the original experience and its analysis.
+    """
+    experience: Experience = Field(..., description="The original experience")
+    analysis: StoryTellingResponse = Field(..., description="The storytelling analysis")

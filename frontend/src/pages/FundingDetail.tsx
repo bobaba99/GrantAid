@@ -44,9 +44,71 @@ export function FundingDetail() {
                 </pre>
             </div>
 
+            <ExperiencesAnalysisSection fundingId={id!} />
+
             <div style={{ marginTop: '2rem' }}>
                 <Link to="/fundings">Back to List</Link>
             </div>
+        </div>
+    );
+}
+
+import { analyzeExperiences, type ExperienceAnalysis } from '../api/funding';
+
+function ExperiencesAnalysisSection({ fundingId }: { fundingId: string }) {
+    const [analyses, setAnalyses] = useState<ExperienceAnalysis[] | null>(null);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
+
+    const handleAnalyze = async () => {
+        setLoading(true);
+        setError('');
+        try {
+            const data = await analyzeExperiences(fundingId);
+            setAnalyses(data);
+        } catch (err) {
+            setError('Failed to analyze experiences: ' + String(err));
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    return (
+        <div style={{ marginTop: '2rem', borderTop: '1px solid #ccc', paddingTop: '1rem' }}>
+            <h2>My Relevant Experiences</h2>
+            <p>See how your experiences align with this funding opportunity.</p>
+
+            {!analyses && !loading && (
+                <button onClick={handleAnalyze} style={{ padding: '0.5rem 1rem', cursor: 'pointer' }}>
+                    Analyze My Experiences
+                </button>
+            )}
+
+            {loading && <p>Analyzing... This may take a few moments.</p>}
+            {error && <p style={{ color: 'red' }}>{error}</p>}
+
+            {analyses && (
+                <div style={{ display: 'grid', gap: '1rem', marginTop: '1rem' }}>
+                    {analyses.map(({ experience, analysis }) => (
+                        <div key={experience.id} style={{ border: '1px solid #ddd', padding: '1rem', borderRadius: '8px' }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                <h3>{experience.title} at {experience.organization}</h3>
+                                <div style={{
+                                    background: analysis.experience_rating >= 8 ? '#d4edda' : analysis.experience_rating >= 5 ? '#fff3cd' : '#f8d7da',
+                                    padding: '0.5rem', borderRadius: '4px', fontWeight: 'bold'
+                                }}>
+                                    Rating: {analysis.experience_rating}/10
+                                </div>
+                            </div>
+                            <p><strong>Original:</strong> {experience.description}</p>
+                            <div style={{ background: '#f9f9f9', padding: '1rem', marginTop: '1rem' }}>
+                                <p><strong>Story:</strong> {analysis.story}</p>
+                                <p><strong>Rationale:</strong> <i>{analysis.rationale}</i></p>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            )}
         </div>
     );
 }

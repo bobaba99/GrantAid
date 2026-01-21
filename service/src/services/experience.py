@@ -3,6 +3,8 @@ from uuid import UUID
 from src.dependencies import supabase
 from src.models import Experience
 
+from src.utils import sanitize_json_response
+
 class ExperienceService:
     async def list_experiences(self, user_id: str, skip: int = 0, limit: int = 50, category: Optional[str] = None) -> List[Experience]:
         query = supabase.table("experience").select("*").eq("user_id", user_id)
@@ -23,6 +25,9 @@ class ExperienceService:
         # But Experience model has ID optional.
         data = experience.dict(exclude={"id"}, exclude_none=True)
         data["user_id"] = user_id
+        
+        # Sanitize data for JSON serialization (handle date objects)
+        data = sanitize_json_response(data)
         
         response = supabase.table("experience").insert(data).execute()
         if not response.data:

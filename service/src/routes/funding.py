@@ -43,3 +43,86 @@ async def get_funding(funding_id: str, current_user = Depends(get_current_user))
     except Exception as e:
          # If UUID is invalid, supabase might throw.
         raise HTTPException(status_code=404, detail=f"Funding not found or error: {str(e)}")
+
+from src.models import Experience, ExperienceAnalysis
+from src.story_teller import StoryTeller
+from src.dependencies import get_story_teller
+
+@router.post("/fundings/{funding_id}/analyze-experiences", response_model=List[ExperienceAnalysis])
+def analyze_experiences(
+    funding_id: str,
+    story_teller: StoryTeller = Depends(get_story_teller),
+    current_user = Depends(get_current_user)
+):
+    """
+    Analyzes all user experiences against the specified funding criteria.
+    """
+    try:
+        # 1. Fetch Funding
+        funding_response = supabase.table("funding").select("*").eq("id", funding_id).execute()
+        if not funding_response.data:
+            raise HTTPException(status_code=404, detail="Funding not found")
+        funding = FundingDefinition(**funding_response.data[0])
+
+        # 2. Fetch User Experiences
+        exp_response = supabase.table("experience").select("*").eq("user_id", current_user.id).execute()
+        experiences_data = exp_response.data
+        
+        # 3. Fetch Existing Analyses
+        # Fetch all analyses for this user and funding to batch check
+        existing_analyses_response = supabase.table("experience_analysis")\
+            .select("*")\
+            .eq("user_id", current_user.id)\
+            .eq("funding_id", funding_id)\
+            .execute()
+            
+        existing_analyses_map = {item['experience_id']: item for item in existing_analyses_response.data}
+        
+        results = []
+        import json
+        from src.models import StoryTellingResponse
+
+        for exp_data in experiences_data:
+            # Pydantic validation
+            experience = Experience(**exp_data)
+            
+            # Check cache
+            if experience.id in existing_analyses_map:
+                cached_data = existing_analyses_map[experience.id]
+                analysis = StoryTellingResponse(
+                    experience_id=cached_data['experience_id'],
+                    experience_rating=cached_data['experience_rating'],
+                    story=cached_data['story'],
+                    rationale=cached_data['rationale']
+                )
+            else:
+                # Generate new
+                analysis = story_teller.tell_story(experience, funding)
+                
+                # Save to DB
+                try:
+                    insert_data = {
+                        "user_id": current_user.id,
+                        "experience_id": experience.id,
+                        "funding_id": funding.id,
+                        "story": analysis.story,
+                        "rationale": analysis.rationale,
+                        "experience_rating": analysis.experience_rating
+                    }
+                    supabase.table("experience_analysis").insert(insert_data).execute()
+                except Exception as save_err:
+                    # Log but don't fail the request if saving fails?
+                    # Or maybe fail? Let's log and continue to return the result to user at least.
+                    print(f"Failed to save analysis for exp {experience.id}: {save_err}")
+
+            results.append(ExperienceAnalysis(
+                experience=experience,
+                analysis=analysis
+            ))
+            
+        return results
+
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=f"Analysis failed: {str(e)}")
