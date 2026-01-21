@@ -23,7 +23,11 @@ export const getFundingById = async (id: string): Promise<FundingDefinition> => 
 
 export interface StoryTellingResponse {
     experience_id: string;
-    experience_rating: number;
+    // Facet-based evaluation scores (1-5 each)
+    experience_rating_facet_a: number; // Competency & Capacity
+    experience_rating_facet_b: number; // Fit with Program Priorities
+    experience_rating_facet_c: number; // Impact & Value
+    experience_rating_facet_d: number; // Narrative Flow & Coherence
     story: string;
     rationale: string;
 }

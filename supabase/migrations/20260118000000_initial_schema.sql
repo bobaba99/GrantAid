@@ -109,7 +109,10 @@ CREATE TABLE IF NOT EXISTS public.experience_analysis (
     funding_id UUID NOT NULL REFERENCES public.funding(id) ON DELETE CASCADE,
     story TEXT NOT NULL,
     rationale TEXT NOT NULL,
-    experience_rating INTEGER NOT NULL,
+    experience_rating_facet_a INTEGER NOT NULL, -- Competency & Capacity
+    experience_rating_facet_b INTEGER NOT NULL, -- Fit with Program Priorities
+    experience_rating_facet_c INTEGER NOT NULL, -- Impact & Value
+    experience_rating_facet_d INTEGER NOT NULL, -- Narrative Flow & Coherence
     created_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
     UNIQUE(experience_id, funding_id)
 );

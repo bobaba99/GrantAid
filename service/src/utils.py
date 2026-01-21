@@ -96,3 +96,31 @@ def load_grant_context(funding) -> str:
             
     return context
 
+def load_evaluation_rubric(funding) -> str:
+    """
+    Loads the universal evaluation rubric from "Synthesized Rubric.md".
+    
+    Args:
+        funding: FundingDefinition model (parameter kept for API consistency)
+    
+    Returns:
+        str: Content of the evaluation rubric, or empty string if file not found
+    """
+    from pathlib import Path
+    
+    logger = get_logger(__name__)
+    
+    base_path = Path(__file__).parent / "grant_context"
+    rubric_file = base_path / "Synthesized Rubric.md"
+    
+    context = ""
+    try:
+        if rubric_file.exists():
+            context = rubric_file.read_text()
+            logger.info(f"Loaded evaluation rubric from {rubric_file.name}")
+        else:
+            logger.warning(f"Evaluation rubric file not found: {rubric_file}")
+    except Exception as e:
+        logger.error(f"Failed to read evaluation rubric file {rubric_file}: {e}")
+            
+    return context

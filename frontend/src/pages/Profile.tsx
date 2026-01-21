@@ -218,7 +218,7 @@ export function Profile() {
                             <div className="card-decoration" style={{ background: getGradientStyle(exp.type) }}></div>
 
                             <div className="experience-header-new">
-                                <div>
+                                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
                                     <span className="badge" style={{ backgroundColor: badgeStyle.bg, color: badgeStyle.text }}>
                                         <span className="badge-dot" style={{ backgroundColor: badgeStyle.dot }}></span>
                                         {exp.type}

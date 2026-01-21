@@ -248,6 +248,7 @@
     text-transform: uppercase;
     letter-spacing: 0.05em;
     margin-bottom: 0.75rem;
+    text-align: left;
 }
 
 .badge-dot {

@@ -150,13 +150,57 @@ function ExperiencesAnalysisSection({ fundingId }: { fundingId: string }) {
                         <div key={experience.id} className="analysis-card">
                             <div className="analysis-header">
                                 <h3 style={{ margin: 0, fontSize: '1.1rem', color: 'var(--funding-text-main)' }}>{experience.title} at {experience.organization}</h3>
-                                <div className="analysis-rating" style={{
-                                    background: analysis.experience_rating >= 8 ? '#dcfce7' : analysis.experience_rating >= 5 ? '#fef9c3' : '#fee2e2',
-                                    color: analysis.experience_rating >= 8 ? '#166534' : analysis.experience_rating >= 5 ? '#854d0e' : '#991b1b'
-                                }}>
-                                    Rating: {analysis.experience_rating}/10
-                                </div>
                             </div>
+
+                            {/* Facet Scores Visualization */}
+                            <div style={{
+                                display: 'grid',
+                                gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+                                gap: '0.75rem',
+                                margin: '1rem 0',
+                                padding: '1rem',
+                                background: 'var(--funding-bg-secondary, #f9fafb)',
+                                borderRadius: '8px'
+                            }}>
+                                {[
+                                    { label: 'Facet A: Competency', score: analysis.experience_rating_facet_a, color: '#3b82f6' },
+                                    { label: 'Facet B: Fit', score: analysis.experience_rating_facet_b, color: '#8b5cf6' },
+                                    { label: 'Facet C: Impact', score: analysis.experience_rating_facet_c, color: '#ec4899' },
+                                    { label: 'Facet D: Narrative', score: analysis.experience_rating_facet_d, color: '#10b981' }
+                                ].map(({ label, score, color }) => (
+                                    <div key={label} style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+                                        <div style={{
+                                            display: 'flex',
+                                            justifyContent: 'space-between',
+                                            alignItems: 'center',
+                                            fontSize: '0.85rem',
+                                            fontWeight: '500'
+                                        }}>
+                                            <span style={{ color: 'var(--funding-text-main)' }}>{label}</span>
+                                            <span style={{
+                                                color: color,
+                                                fontWeight: '700',
+                                                fontSize: '0.95rem'
+                                            }}>{score}/5</span>
+                                        </div>
+                                        <div style={{
+                                            height: '8px',
+                                            background: 'var(--funding-bg-main, #e5e7eb)',
+                                            borderRadius: '4px',
+                                            overflow: 'hidden'
+                                        }}>
+                                            <div style={{
+                                                height: '100%',
+                                                width: `${(score / 5) * 100}%`,
+                                                background: color,
+                                                borderRadius: '4px',
+                                                transition: 'width 0.3s ease'
+                                            }} />
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+
                             <p style={{ textAlign: 'left', fontSize: '0.95rem', color: 'var(--funding-text-sub)', marginBottom: '1rem' }}><strong>Original:</strong> {experience.description}</p>
                             <div className="analysis-content">
                                 <p style={{ textAlign: 'left', lineHeight: '2', marginBottom: '1rem', color: 'var(--funding-text-main)' }}>

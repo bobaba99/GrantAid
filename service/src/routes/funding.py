@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel
 from src.dependencies import get_current_user, supabase
 from src.models import (
-    FundingDefinition, FundingAgency, Experience, ExperienceAnalysis
+    FundingDefinition, FundingAgency, Experience, ExperienceAnalysis, ExperienceAnalysisResponse
 )
 from src.story_teller import StoryTeller
 from src.dependencies import get_story_teller
@@ -46,7 +46,7 @@ async def get_funding(funding_id: str, current_user = Depends(get_current_user))
          # If UUID is invalid, supabase might throw.
         raise HTTPException(status_code=404, detail=f"Funding not found or error: {str(e)}")
 
-@router.get("/fundings/{funding_id}/analyses", response_model=List[ExperienceAnalysis])
+@router.get("/fundings/{funding_id}/analyses", response_model=List[ExperienceAnalysisResponse])
 async def get_funding_analyses(
     funding_id: str,
     current_user = Depends(get_current_user)
@@ -82,11 +82,14 @@ async def get_funding_analyses(
             if exp_id in experiences_map:
                 analysis = StoryTellingResponse(
                     experience_id=exp_id,
-                    experience_rating=item['experience_rating'],
+                    experience_rating_facet_a=item['experience_rating_facet_a'],
+                    experience_rating_facet_b=item['experience_rating_facet_b'],
+                    experience_rating_facet_c=item['experience_rating_facet_c'],
+                    experience_rating_facet_d=item['experience_rating_facet_d'],
                     story=item['story'],
                     rationale=item['rationale']
                 )
-                results.append(ExperienceAnalysis(
+                results.append(ExperienceAnalysisResponse(
                     experience=experiences_map[exp_id],
                     analysis=analysis
                 ))
@@ -97,7 +100,7 @@ async def get_funding_analyses(
 
 
 
-@router.post("/fundings/{funding_id}/analyze-experiences", response_model=List[ExperienceAnalysis])
+@router.post("/fundings/{funding_id}/analyze-experiences", response_model=List[ExperienceAnalysisResponse])
 def analyze_experiences(
     funding_id: str,
     force_refresh: bool = False,
@@ -141,7 +144,10 @@ def analyze_experiences(
                 cached_data = existing_analyses_map[experience.id]
                 analysis = StoryTellingResponse(
                     experience_id=cached_data['experience_id'],
-                    experience_rating=cached_data['experience_rating'],
+                    experience_rating_facet_a=cached_data['experience_rating_facet_a'],
+                    experience_rating_facet_b=cached_data['experience_rating_facet_b'],
+                    experience_rating_facet_c=cached_data['experience_rating_facet_c'],
+                    experience_rating_facet_d=cached_data['experience_rating_facet_d'],
                     story=cached_data['story'],
                     rationale=cached_data['rationale']
                 )
@@ -157,7 +163,10 @@ def analyze_experiences(
                         "funding_id": funding.id,
                         "story": analysis.story,
                         "rationale": analysis.rationale,
-                        "experience_rating": analysis.experience_rating
+                        "experience_rating_facet_a": analysis.experience_rating_facet_a,
+                        "experience_rating_facet_b": analysis.experience_rating_facet_b,
+                        "experience_rating_facet_c": analysis.experience_rating_facet_c,
+                        "experience_rating_facet_d": analysis.experience_rating_facet_d
                     }
                     supabase.table("experience_analysis").upsert(insert_data).execute()
                 except Exception as save_err:
@@ -165,7 +174,7 @@ def analyze_experiences(
                     # Or maybe fail? Let's log and continue to return the result to user at least.
                     print(f"Failed to save analysis for exp {experience.id}: {save_err}")
 
-            results.append(ExperienceAnalysis(
+            results.append(ExperienceAnalysisResponse(
                 experience=experience,
                 analysis=analysis
             ))
