@@ -32,6 +32,7 @@ from src.routes import experiences
 app.include_router(experiences.router, prefix="/api", tags=["experiences"])
 
 @app.get("/")
+@app.head("/")
 def read_root():
     return {"status": "ok", "service": "GrantAid Backend", "version": "1.0.0"}
 
