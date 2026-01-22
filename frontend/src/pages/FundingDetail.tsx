@@ -78,6 +78,8 @@ export function FundingDetail() {
                 <div className="analysis-section">
                     <ExperiencesAnalysisSection fundingId={id!} />
                 </div>
+
+                <FacetGuide />
             </div>
 
             {createPortal(
@@ -217,3 +219,57 @@ function ExperiencesAnalysisSection({ fundingId }: { fundingId: string }) {
         </div>
     );
 }
+
+function FacetGuide() {
+    return (
+        <div className="facet-guide-section">
+            <h3 className="section-title">Facet Guide</h3>
+            <div className="facet-guide-card">
+                <div className="facet-item">
+                    <div className="facet-header">
+                        <span className="facet-badge facet-a">A</span>
+                        <strong>Competency</strong>
+                    </div>
+                    <p>Evaluates your capability to conduct the proposed research based on your track record, skills, and leadership.</p>
+                </div>
+
+                <div className="facet-item">
+                    <div className="facet-header">
+                        <span className="facet-badge facet-b">B</span>
+                        <strong>Fit</strong>
+                    </div>
+                    <p>Assesses alignment with the agency's strategic goals, including EDI and knowledge mobilization.</p>
+                </div>
+
+                <div className="facet-item">
+                    <div className="facet-header">
+                        <span className="facet-badge facet-c">C</span>
+                        <strong>Impact</strong>
+                    </div>
+                    <p>Evaluates the significance, reach, and influence of your contributions beyond just academic metrics.</p>
+                </div>
+
+                <div className="facet-item">
+                    <div className="facet-header">
+                        <span className="facet-badge facet-d">D</span>
+                        <strong>Narrative</strong>
+                    </div>
+                    <p>Assesses the quality, clarity, and persuasiveness of your application's storytelling.</p>
+                </div>
+
+                <a
+                    href="https://www.notion.so/Rubric-facets-2efdc7826a6880ca9c09eb9a844ad046?source=copy_link"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="learn-more-link"
+                >
+                    Learn more
+                    <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>open_in_new</span>
+                </a>
+            </div>
+        </div>
+    );
+}
+
+
+

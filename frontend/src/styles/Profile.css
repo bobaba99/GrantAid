@@ -39,8 +39,8 @@
 
 .profile-container {
     width: 100%;
-    max-width: 1280px;
-    /* max-w-7xl */
+    max-width: 1480px;
+    /* max-w-7xl increased by ~15% */
     margin: 0 auto;
     padding: 2rem 1rem;
     color: var(--profile-text-main);
