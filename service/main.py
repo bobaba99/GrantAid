@@ -21,7 +21,7 @@ app = FastAPI(title="GrantAid")
 # CORS Configuration
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "https://grantaid.onrender.com"],
+    allow_origins=["http://localhost:5173", "https://grantaid.onrender.com", "https://grantaid-backend.onrender.com"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -42,8 +42,20 @@ def read_current_user(user = Depends(get_current_user)):
         profile_response = supabase.table("profiles").select("*").eq("id", user.id).single().execute()
         profile_data = profile_response.data if profile_response.data else {}
     except Exception as e:
-        logger.warning(f"Could not fetch profile for {user.id}: {e}")
-        profile_data = {}
+        # If profile doesn't exist (PGRST116), create it
+        if "PGRST116" in str(e) or getattr(e, "code", "") == "PGRST116":
+             logger.info(f"Profile not found for {user.id}, creating default profile.")
+             try:
+                 new_profile = {"id": user.id}
+                 # Insert default profile
+                 insert_res = supabase.table("profiles").insert(new_profile).execute()
+                 profile_data = insert_res.data[0] if insert_res.data else {}
+             except Exception as create_error:
+                 logger.error(f"Failed to create default profile for {user.id}: {create_error}")
+                 profile_data = {}
+        else:
+             logger.warning(f"Could not fetch profile for {user.id}: {e}")
+             profile_data = {}
 
     # Merge auth email (authoritative) with profile data
     return {
