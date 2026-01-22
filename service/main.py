@@ -21,7 +21,7 @@ app = FastAPI(title="GrantAid")
 # CORS Configuration
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "https://grantaid.onrender.com"],
+    allow_origins=["http://localhost:5173", "https://grantaid-backend.onrender.com"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
