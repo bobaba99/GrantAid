@@ -8,10 +8,18 @@ from dotenv import load_dotenv
 load_dotenv()
 
 SUPABASE_URL = os.getenv("VITE_SUPABASE_URL")
-SUPABASE_KEY = os.getenv("VITE_SUPABASE_ANON_KEY")
+SUPABASE_KEY = os.getenv("SUPABASE_SERVICE_ROLE_KEY") or os.getenv("VITE_SUPABASE_SERVICE_ROLE_KEY") or os.getenv("VITE_SUPABASE_ANON_KEY")
 
 if not SUPABASE_URL or not SUPABASE_KEY:
     raise ValueError("SUPABASE_URL and SUPABASE_KEY must be set in environment variables")
+
+print(f"DEBUG: Loading Supabase Client. URL: {SUPABASE_URL}")
+if os.getenv("SUPABASE_SERVICE_ROLE_KEY"):
+    print("DEBUG: SUPABASE_SERVICE_ROLE_KEY is SET. Using Admin Key.")
+elif os.getenv("VITE_SUPABASE_SERVICE_ROLE_KEY"):
+    print("DEBUG: VITE_SUPABASE_SERVICE_ROLE_KEY is SET. Using Admin Key.")
+else:
+    print("DEBUG: Using ANON KEY (RLS Restricted). Service Role Key is MISSING.")
 
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
